@@ -47,10 +47,12 @@ class MyDataset():
     if not os.path.exists(data_full_path):
       os.makedirs(data_full_path)
 
+    print(f'Saving {types} into {data_full_name}.npy...')
     np.save(data_full_name, norm_data)
 
   def create_image_3d(self):
     image_data = load_image_data(self.input_image_niftii, path=self.scan_full_path)
+    print(f'Loading from {self.scan_full_path}/{self.input_image_niftii}...')
 
     self.save_3d(image_data, 'images')
 
