@@ -9,7 +9,8 @@ dataset = {
   'validation_dir': 'datasets/z_validation_axis{}'.format(axis),
   'test_dir': 'datasets/z_validation_axis{}'.format(axis),
   'image_width': 176,
-  'image_height': 256
+  'image_height': 256,
+  'image_depth': 256
 }
 
 # Model setup

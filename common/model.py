@@ -7,8 +7,9 @@ class MyModel():
     arch,
     checkpoint,
     loss_function=cfg.model['loss_fn'],
-    input_cols=cfg.dataset['image_width'],
-    input_rows=cfg.dataset['image_height']
+    width=cfg.dataset['image_width'],
+    height=cfg.dataset['image_height'],
+    depth=cfg.dataset['image_depth']
   ):
     self.arch = arch
     self.checkpoint = checkpoint
@@ -16,8 +17,9 @@ class MyModel():
     self.model = network.get(
       name=arch,
       loss_function=loss.get(loss_function),
-      input_cols=input_cols,
-      input_rows=input_rows
+      width=width,
+      height=height,
+      depth=depth
     )
 
   def get_model_summary(self):
