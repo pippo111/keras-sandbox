@@ -27,22 +27,21 @@ class MyDataset():
     scan_name,
     labels,
     scan_collection_dir = 'niftii',
-    dataset_collection_dir = 'datasets',
+    collection_name = 'mindboggle',
     input_label_niftii = 'aseg-in-t1weighted_2std.nii.gz',
     input_image_niftii = 't1weighted_2std.nii.gz'
   ):
     self.scan_name = scan_name
     self.labels = labels
-    self.scan_collection_dir = scan_collection_dir
-    self.dataset_collection_dir = dataset_collection_dir
+    self.collection_name = collection_name
     self.input_label_niftii = input_label_niftii
     self.input_image_niftii = input_image_niftii
 
-    self.scan_full_path = os.path.join('.', self.scan_collection_dir, self.scan_name)
+    self.scan_full_path = os.path.join('./niftii', self.scan_name)
 
   def save_3d(self, data, types):
     norm_data = norm_to_uint8(data)
-    data_full_path = os.path.join('.', self.dataset_collection_dir, types)
+    data_full_path = os.path.join('./datasets', self.collection_name, types)
     data_full_name = os.path.join(data_full_path, self.scan_name)
 
     if not os.path.exists(data_full_path):
