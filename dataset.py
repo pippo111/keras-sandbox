@@ -11,7 +11,7 @@ def norm_to_uint8(data):
   img = data.astype(np.uint8)
   return img
 
-def convert_to_binary_mask(data, labels):
+def convert_to_binary_3d(data, labels):
   binary_data = np.array([[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]).astype(np.float32)
   return binary_data
 
@@ -58,7 +58,7 @@ class MyDataset():
 
   def create_label_3d(self):
     label_data = load_image_data(self.input_label_niftii, path=self.scan_full_path)
-    binary_data = convert_to_binary_mask(label_data, self.labels)
+    binary_data = convert_to_binary_3d(label_data, self.labels)
 
     self.save_3d(binary_data, 'labels')
 
