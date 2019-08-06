@@ -12,7 +12,7 @@ def norm_to_uint8(data):
   return img
 
 def convert_to_binary_3d(data, labels):
-  binary_data = np.array([[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]).astype(np.float32)
+  binary_data = np.array([[[0.0 if pixel in labels else 255.0 for pixel in row] for row in matrix] for matrix in data]).astype(np.float32)
   return binary_data
 
 def load_image_data(filename, path='.'):
@@ -24,44 +24,44 @@ def load_image_data(filename, path='.'):
 
 class MyDataset():
   def __init__(self,
-    scan_name,
+    scans,
     labels,
-    scan_collection_dir = 'niftii',
     collection_name = 'mindboggle',
     input_label_niftii = 'aseg-in-t1weighted_2std.nii.gz',
     input_image_niftii = 't1weighted_2std.nii.gz'
   ):
-    self.scan_name = scan_name
+    self.scans = scans
     self.labels = labels
     self.collection_name = collection_name
     self.input_label_niftii = input_label_niftii
     self.input_image_niftii = input_image_niftii
 
-    self.scan_full_path = os.path.join('./niftii', self.scan_name)
-
-  def save_3d(self, data, types):
+  def save_3d(self, data, name, types):
     norm_data = norm_to_uint8(data)
     data_full_path = os.path.join('./datasets', self.collection_name, types)
-    data_full_name = os.path.join(data_full_path, self.scan_name)
+    data_full_name = os.path.join(data_full_path, name)
 
     if not os.path.exists(data_full_path):
       os.makedirs(data_full_path)
 
-    print(f'Saving {types} into {data_full_name}.npy...')
+    print(f'Saving {types} as {data_full_name}.npy')
     np.save(data_full_name, norm_data)
 
-  def create_image_3d(self):
-    image_data = load_image_data(self.input_image_niftii, path=self.scan_full_path)
-    print(f'Loading from {self.scan_full_path}/{self.input_image_niftii}...')
+  def create_image_3d(self, scan_name, path):
+    print(f'Loading from {path}/{self.input_image_niftii}...')
+    image_data = load_image_data(self.input_image_niftii, path)
 
-    self.save_3d(image_data, 'images')
+    self.save_3d(image_data, scan_name, 'images')
 
-  def create_label_3d(self):
-    label_data = load_image_data(self.input_label_niftii, path=self.scan_full_path)
+  def create_label_3d(self, scan_name, path):
+    print(f'Loading from {path}/{self.input_label_niftii}')
+    label_data = load_image_data(self.input_label_niftii, path)
     binary_data = convert_to_binary_3d(label_data, self.labels)
 
-    self.save_3d(binary_data, 'labels')
+    self.save_3d(binary_data, scan_name, 'labels')
 
   def create_dataset_3d(self):
-    self.create_image_3d()
-    self.create_label_3d()
+    for scan_name in self.scans:
+      full_path = os.path.join('./niftii', scan_name)
+      self.create_image_3d(scan_name, full_path)
+      self.create_label_3d(scan_name, full_path)
