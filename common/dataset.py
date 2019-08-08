@@ -20,7 +20,7 @@ def convert_to_binary_3d(data, labels):
   binary_data = np.array(
     [[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]
   ).astype(np.float32)
-  
+
   return binary_data
 
 def load_image_data(filename, path='.'):
@@ -32,7 +32,7 @@ def load_image_data(filename, path='.'):
 
 class MyDataset():
   def __init__(self,
-    scans,
+    scans = [],
     labels = [0.0],
     is_3d = False,
     collection_name = 'mindboggle',
@@ -41,7 +41,8 @@ class MyDataset():
     width=176,
     height=256,
     depth=256,
-    batch_size = 1
+    batch_size = 1,
+    limit = 20
   ):
     self.scans = scans
     self.labels = labels
@@ -53,6 +54,7 @@ class MyDataset():
     self.width = width
     self.height = height
     self.depth = depth
+    self.limit = limit
 
   def save_3d(self, data, name, types):
     norm_data = norm_to_uint8(data)
@@ -93,17 +95,20 @@ class MyDataset():
       self.create_image_3d(scan_name, full_path)
       self.create_label_3d(scan_name, full_path)
 
-  def get_test_train_gen(self):
+  def create_test_train_gen(self):
     if self.is_3d:
-      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.npy'))
-      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.npy'))
+      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.npy'))[:self.limit]
+      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.npy'))[:self.limit]
     else:
-      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.png'))
-      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.png'))
+      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.png'))[:self.limit]
+      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.png'))[:self.limit]
 
     X_train, X_test, y_train, y_test = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
 
     train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size)
     test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size)
+
+    self.train_generator = train_generator
+    self.test_generator = test_generator
 
     return train_generator, test_generator

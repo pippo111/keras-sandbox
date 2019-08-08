@@ -32,7 +32,7 @@ class MyModel():
   def get_model_summary(self):
     self.model.summary()
 
-  def start(self, train_generator, test_generator):
+  def train(self, train_generator, test_generator):
     self.model.fit_generator(
       train_generator,
       epochs=self.epochs,
