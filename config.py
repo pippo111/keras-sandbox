@@ -19,9 +19,10 @@ model = {
   'loss_fn': loss_fn,  # binary | dice | wce
   'checkpoint': 'weights.axis_{}_{}_{}'.format(axis, arch, loss_fn),
   'epochs': 50,
-  'batch_size': 16,
+  'batch_size': 8,
   'seed': 1,
   'threshold': 0.5,
+  'filters': 4
 }
 
 # Output result setup

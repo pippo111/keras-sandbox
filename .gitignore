@@ -14,6 +14,9 @@
 !/niftii/.gitkeep
 /datasets/*
 !/datasets/.gitkeep
+# Output files
+/output/*
+!/output/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

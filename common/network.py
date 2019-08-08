@@ -174,7 +174,8 @@ def resunet(width, height, depth, n_filters, loss_function):
 
   return model
 
-def unet_3d(width, height, depth, n_filters, loss_function, batch_norm=True):
+def unet_3d(width, height, depth, n_filters, loss_function, batch_norm=False):
+  print(loss_function)
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3, 3), activation='relu', padding='same'):
     x = Conv3D(
@@ -199,7 +200,7 @@ def unet_3d(width, height, depth, n_filters, loss_function, batch_norm=True):
 
     return x
 
-  inputs = Input((height, width, depth, 1))
+  inputs = Input((width, height, depth, 1))
 
   # Contracting path
   conv1 = conv_block(inputs, n_filters)

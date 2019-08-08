@@ -1,5 +1,6 @@
 nibabel
-tensorflow
+tensorflow-gpu
 keras
 pillow
 matplotlib
+sklearn
