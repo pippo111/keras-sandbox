@@ -1,8 +1,8 @@
 from time import time
 from keras.callbacks import TensorBoard, ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 
-from common import network
-from common import loss
+from networks import network
+from networks import loss
 import config as cfg
 
 class MyModel():

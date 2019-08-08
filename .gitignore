@@ -1,22 +1,15 @@
-# Image datasets
-/z_train
-/z_validation
-# Callback logs
-/logs/*
-!/logs/.gitkeep
-# Saved models
-/models/*
-!/models/.gitkeep
-# IDE config
-/.vscode/*
-# Niftii and datasets files
-/niftii/*
-!/niftii/.gitkeep
-/datasets/*
-!/datasets/.gitkeep
-# Output files
-/output/*
-!/output/.gitkeep
+# Input extracted datasets
+/input/datasets/*
+!/input/datasets/.gitkeep
+# Input raw niftii datasets
+/input/niftii/*
+!/input/niftii/.gitkeep
+# Output logs
+/output/logs/*
+!/output/logs/.gitkeep
+# Output models
+/output/models/*
+!/output/models/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

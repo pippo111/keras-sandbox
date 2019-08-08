@@ -56,9 +56,12 @@ class MyDataset():
     self.depth = depth
     self.limit = limit
 
+    self.in_dataset_dir = './input/niftii'
+    self.out_dataset_dir = './input/datasets'
+
   def save_3d(self, data, name, types):
     norm_data = norm_to_uint8(data)
-    data_full_path = os.path.join('./datasets', self.collection_name, types)
+    data_full_path = os.path.join(self.out_dataset_dir, self.collection_name, types)
     data_full_name = os.path.join(data_full_path, name)
 
     if not os.path.exists(data_full_path):
@@ -91,17 +94,17 @@ class MyDataset():
   # Public api
   def create_dataset_3d(self):
     for scan_name in self.scans:
-      full_path = os.path.join('./niftii', scan_name)
+      full_path = os.path.join(self.in_dataset_dir, scan_name)
       self.create_image_3d(scan_name, full_path)
       self.create_label_3d(scan_name, full_path)
 
   def create_test_train_gen(self):
     if self.is_3d:
-      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.npy'))[:self.limit]
-      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.npy'))[:self.limit]
+      X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
+      y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.npy'))[:self.limit]
     else:
-      X_files = glob.glob(os.path.join('./datasets', self.collection_name, 'images', '*.png'))[:self.limit]
-      y_files = glob.glob(os.path.join('./datasets', self.collection_name, 'labels', '*.png'))[:self.limit]
+      X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.png'))[:self.limit]
+      y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.png'))[:self.limit]
 
     X_train, X_test, y_train, y_test = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
 
