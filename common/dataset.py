@@ -18,10 +18,20 @@ def norm_to_uint8(data):
 
 def convert_to_binary_3d(data, labels):
   binary_data = np.array(
-    [[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]
+    [[[0.0 if pixel in labels else 255.0 for pixel in row] for row in matrix] for matrix in data]
   ).astype(np.float32)
 
   return binary_data
+
+def resize_3d(data, width, height, depth):
+  in_width, in_height, in_depth = data.shape
+  width_ratio = width / in_width
+  height_ratio = height /in_height
+  depth_ratio = depth / in_depth
+
+  resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio))
+
+  return resized_data
 
 def load_image_data(filename, path='.'):
   full_path = os.path.join(path, filename)
@@ -42,7 +52,7 @@ class MyDataset():
     height=256,
     depth=256,
     batch_size = 1,
-    limit = 20
+    limit = None
   ):
     self.scans = scans
     self.labels = labels
@@ -60,7 +70,6 @@ class MyDataset():
     self.out_dataset_dir = './input/datasets'
 
   def save_3d(self, data, name, types):
-    norm_data = norm_to_uint8(data)
     data_full_path = os.path.join(self.out_dataset_dir, self.collection_name, types)
     data_full_name = os.path.join(data_full_path, name)
 
@@ -69,27 +78,27 @@ class MyDataset():
 
     print(f'Saving {types} as {data_full_name}.npy')
 
-    im_width, im_height, im_depth = norm_data.shape
-    width_ratio = self.width / im_width
-    height_ratio = self.height /im_height
-    depth_ratio = self.depth / im_depth
-    resized_data = zoom(norm_data, (width_ratio, height_ratio, depth_ratio))
-    reshaped_data = resized_data.reshape((self.width, self.height, self.depth, 1))
+    norm_data = norm_to_uint8(data)
 
-    np.save(data_full_name, reshaped_data)
+    # save normalized to uint (0 - 255)
+    np.save(data_full_name, norm_data)
 
   def create_image_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_image_niftii}...')
     image_data = load_image_data(self.input_image_niftii, path)
+    resized_data = resize_3d(image_data, self.width, self.height, self.depth)
 
-    self.save_3d(image_data, scan_name, 'images')
+    self.save_3d(resized_data, scan_name, 'images')
 
   def create_label_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_label_niftii}')
     label_data = load_image_data(self.input_label_niftii, path)
     binary_data = convert_to_binary_3d(label_data, self.labels)
+    resized_data = resize_3d(binary_data, self.width, self.height, self.depth)
+    resized_data[resized_data > 0.0] = 255.0
+    resized_data[resized_data <= 0.0] = 0.0
 
-    self.save_3d(binary_data, scan_name, 'labels')
+    self.save_3d(resized_data, scan_name, 'labels')
 
   # Public api
   def create_dataset_3d(self):

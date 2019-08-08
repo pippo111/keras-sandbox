@@ -9,7 +9,8 @@ my_dataset = dataset.MyDataset(
 
 my_model = model.MyModel(
   arch='Unet3d',
-  checkpoint='unet_3d'
+  loss_function='dice',
+  checkpoint='unet3d_dice'
 )
 
 train_generator, test_generator = my_dataset.create_test_train_gen()

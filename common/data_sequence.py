@@ -18,8 +18,15 @@ class DataSequence3d(Sequence):
     
     batch_X = [np.load(X) for X in batch_X]
     batch_y = [np.load(y) for y in batch_y]
+
+    batch_X = np.array(batch_X).astype(np.float32)
+    batch_X = batch_X.reshape(batch_X.shape[0], batch_X.shape[1], batch_X.shape[2], batch_X.shape[3], 1)
+    batch_X = batch_X / 255.0
+    batch_y = np.array(batch_y).astype(np.float32)
+    batch_y = batch_y.reshape(batch_y.shape[0], batch_y.shape[1], batch_y.shape[2], batch_y.shape[3], 1)
+    batch_y = batch_y / 255.0
     
-    return np.array(batch_X), np.array(batch_y)
+    return batch_X, batch_y
   
   def on_epoch_end(self):   
     to_shuffle = list(zip(self.X, self.y))

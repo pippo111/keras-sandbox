@@ -6,7 +6,6 @@ from keras.layers.merge import concatenate
 from keras.optimizers import Adam
 
 def unet3d(width, height, depth, n_filters, loss_function, batch_norm=False):
-  print(loss_function)
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3, 3), activation='relu', padding='same'):
     x = Conv3D(
