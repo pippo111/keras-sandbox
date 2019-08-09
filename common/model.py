@@ -16,6 +16,7 @@ class MyModel():
     epochs=cfg.model['epochs'],
     filters=cfg.model['filters']
   ):
+    print(width, height, depth)
     self.arch = arch
     self.checkpoint = checkpoint
     self.epochs = epochs
@@ -32,6 +33,9 @@ class MyModel():
   def get_model_summary(self):
     self.model.summary()
 
+  def load(self):
+    self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
+
   def train(self, train_generator, test_generator):
     self.model.fit_generator(
       train_generator,
@@ -44,3 +48,11 @@ class MyModel():
       ],
       validation_data=test_generator
     )
+    
+  def evaluate(self, test_generator):
+    history = self.model.evaluate_generator(test_generator, verbose=1)
+    print(history)
+
+    predicted = self.model.predict_generator(test_generator, steps=1, verbose=1)
+    
+    return predicted
