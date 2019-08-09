@@ -1,6 +1,7 @@
 from common import dataset
 
 my_dataset = dataset.MyDataset(
+  collection_name='mindboggle_scaled',
   scans = [
     'NKI-RS-22-1',
     'NKI-RS-22-2',
@@ -63,6 +64,9 @@ my_dataset = dataset.MyDataset(
     'OASIS-TRT-20-19',
     'OASIS-TRT-20-20'
   ],
-  labels = [0.0]
+  labels = [0.0],
+  width=44,
+  height=64,
+  depth=64
 )
 my_dataset.create_dataset_3d()

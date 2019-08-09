@@ -10,7 +10,7 @@ my_dataset = dataset.MyDataset(
 my_model = model.MyModel(
   arch='Unet3d',
   loss_function='dice',
-  checkpoint='unet3d_dice'
+  checkpoint='unet3d_dice_scaled'
 )
 
 train_generator, test_generator = my_dataset.create_test_train_gen()

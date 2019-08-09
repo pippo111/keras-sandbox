@@ -95,8 +95,8 @@ class MyDataset():
     label_data = load_image_data(self.input_label_niftii, path)
     binary_data = convert_to_binary_3d(label_data, self.labels)
     resized_data = resize_3d(binary_data, self.width, self.height, self.depth)
-    resized_data[resized_data > 0.0] = 255.0
-    resized_data[resized_data <= 0.0] = 0.0
+    resized_data[resized_data > 200.0] = 255.0
+    resized_data[resized_data <= 200.0] = 0.0
 
     self.save_3d(resized_data, scan_name, 'labels')
 

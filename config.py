@@ -8,9 +8,9 @@ dataset = {
   'train_dir': 'datasets/z_train_axis{}'.format(axis),
   'validation_dir': 'datasets/z_validation_axis{}'.format(axis),
   'test_dir': 'datasets/z_validation_axis{}'.format(axis),
-  'image_width': 176,
-  'image_height': 256,
-  'image_depth': 256
+  'image_width': 44,
+  'image_height': 64,
+  'image_depth': 64
 }
 
 # Model setup
@@ -22,7 +22,7 @@ model = {
   'batch_size': 8,
   'seed': 1,
   'threshold': 0.5,
-  'filters': 4
+  'filters': 16
 }
 
 # Output result setup
