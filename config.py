@@ -4,7 +4,7 @@ axis = 1
 
 # Dataset setup
 dataset = {
-  'collection_name': 'mindboggle_scaled',
+  'collection_name': 'mindboggle_scaled_order',
   'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
   'input_image_niftii': 't1weighted_2std.nii.gz',
   'width': 48,

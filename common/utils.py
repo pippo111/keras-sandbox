@@ -27,7 +27,7 @@ def resize_3d(data, width, height, depth):
   height_ratio = height /in_height
   depth_ratio = depth / in_depth
 
-  resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio))
+  resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio), order=0)
 
   return resized_data
 
