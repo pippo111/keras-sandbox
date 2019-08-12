@@ -9,12 +9,12 @@ class MyModel():
   def __init__(self,
     arch,
     checkpoint,
-    loss_function=cfg.model['loss_fn'],
-    width=cfg.dataset['image_width'],
-    height=cfg.dataset['image_height'],
-    depth=cfg.dataset['image_depth'],
-    epochs=cfg.model['epochs'],
-    filters=cfg.model['filters']
+    loss_function,
+    width=176,
+    height=256,
+    depth=256,
+    epochs=50,
+    filters=16
   ):
     print(width, height, depth)
     self.arch = arch
@@ -53,6 +53,6 @@ class MyModel():
     history = self.model.evaluate_generator(test_generator, verbose=1)
     print(history)
 
-    predicted = self.model.predict_generator(test_generator, steps=1, verbose=1)
+    predicted = self.model.predict_generator(test_generator, verbose=1)
     
     return predicted

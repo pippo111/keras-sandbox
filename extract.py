@@ -1,7 +1,15 @@
+import config as cfg
+
 from common import dataset
 
 my_dataset = dataset.MyDataset(
-  collection_name='mindboggle_scaled',
+  collection_name = cfg.dataset['collection_name'],
+  input_label_niftii = cfg.dataset['input_label_niftii'],
+  input_image_niftii = cfg.dataset['input_image_niftii'],
+  labels = cfg.dataset['labels'],
+  width=cfg.dataset['width'],
+  height=cfg.dataset['height'],
+  depth=cfg.dataset['depth'],
   scans = [
     'NKI-RS-22-1',
     'NKI-RS-22-2',
@@ -63,10 +71,6 @@ my_dataset = dataset.MyDataset(
     'OASIS-TRT-20-18',
     'OASIS-TRT-20-19',
     'OASIS-TRT-20-20'
-  ],
-  labels = [0.0],
-  width=44,
-  height=64,
-  depth=64
+  ]
 )
 my_dataset.create_dataset_3d()

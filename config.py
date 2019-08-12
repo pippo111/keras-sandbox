@@ -1,16 +1,18 @@
-arch = 'ResUnet'
+arch = 'Unet3d'
 loss_fn = 'dice'
 axis = 1
 
 # Dataset setup
 dataset = {
-  'limit': None,
-  'train_dir': 'datasets/z_train_axis{}'.format(axis),
-  'validation_dir': 'datasets/z_validation_axis{}'.format(axis),
-  'test_dir': 'datasets/z_validation_axis{}'.format(axis),
-  'image_width': 44,
-  'image_height': 64,
-  'image_depth': 64
+  'collection_name': 'mindboggle_scaled',
+  'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
+  'input_image_niftii': 't1weighted_2std.nii.gz',
+  'width': 48,
+  'height': 64,
+  'depth': 64,
+  'labels': [0.0],
+  'batch_size': 8,
+  'limit': None
 }
 
 # Model setup
@@ -22,7 +24,7 @@ model = {
   'batch_size': 8,
   'seed': 1,
   'threshold': 0.5,
-  'filters': 16
+  'filters': 8
 }
 
 # Output result setup

@@ -4,13 +4,18 @@ from common import dataset
 import config as cfg
 
 my_dataset = dataset.MyDataset(
-  is_3d=True
+  collection_name = cfg.dataset['collection_name']
 )
 
 my_model = model.MyModel(
-  arch='Unet3d',
-  loss_function='dice',
-  checkpoint='unet3d_dice_scaled'
+  arch = cfg.model['arch'],
+  loss_function = cfg.model['loss_fn'],
+  checkpoint = cfg.model['checkpoint'],
+  width = cfg.dataset['width'],
+  height = cfg.dataset['height'],
+  depth = cfg.dataset['depth'],
+  epochs = cfg.model['epochs'],
+  filters = cfg.model['filters']
 )
 
 train_generator, test_generator = my_dataset.create_test_train_gen()

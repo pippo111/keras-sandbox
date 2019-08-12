@@ -1,5 +1,6 @@
 from common import model
 from common import dataset
+import numpy as np
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -9,40 +10,47 @@ import config as cfg
 matplotlib.use("TkAgg")
 
 my_dataset = dataset.MyDataset(
-  is_3d=True
+  collection_name = cfg.dataset['collection_name']
 )
 
 my_model = model.MyModel(
-  arch='Unet3d',
-  checkpoint='unet3d'
+  arch = cfg.model['arch'],
+  loss_function = cfg.model['loss_fn'],
+  checkpoint = cfg.model['checkpoint'],
+  width = cfg.dataset['width'],
+  height = cfg.dataset['height'],
+  depth = cfg.dataset['depth'],
+  epochs = cfg.model['epochs'],
+  filters = cfg.model['filters']
 )
 
 train_generator, test_generator = my_dataset.create_test_train_gen()
 my_model.load()
 predicted = my_model.evaluate(test_generator)
+preds_val_t = (predicted > 0.0).astype(np.uint8)
 
 test_image, test_mask = test_generator.__getitem__(0)
 
 test_image.shape
-image = test_image.squeeze()
-image.shape
+image = test_image[1].squeeze()
+print(image.shape)
 
-image_0 = image[55, :, :]
-image_1 = image[:, 55, :]
-image_2 = image[:, :, 100]
+image_0 = image[20, :, :]
+image_1 = image[:, 20, :]
+image_2 = image[:, :, 20]
 
 test_mask.shape
-mask = test_mask.squeeze()
-mask.shape
+mask = test_mask[1].squeeze()
+print(mask.shape)
 
-mask_0 = mask[55, :, :]
-mask_1 = mask[:, 55, :]
-mask_2 = mask[:, :, 100]
+mask_0 = mask[20, :, :]
+mask_1 = mask[:, 20, :]
+mask_2 = mask[:, :, 20]
 
-pred = predicted.squeeze()
-pred_0 = pred[55, :, :]
-pred_1 = pred[:, 55, :]
-pred_2 = pred[:, :, 100]
+pred = preds_val_t[1].squeeze()
+pred_0 = pred[20, :, :]
+pred_1 = pred[:, 20, :]
+pred_2 = pred[:, :, 20]
 
 fig, ax = plt.subplots(3, 3, figsize=(20, 20))
 

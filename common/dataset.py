@@ -1,62 +1,26 @@
-import numpy as np
 import os
+import numpy as np
 import glob
-import nibabel as nib
 from sklearn.model_selection import train_test_split
-from scipy.ndimage import zoom
 
 from common import data_sequence
-	
-def norm_to_uint8(data):
-  max_value = data.max()
-  if not max_value == 0:
-    data = data / max_value
-
-  data = 255 * data
-  img = data.astype(np.uint8)
-  return img
-
-def convert_to_binary_3d(data, labels):
-  binary_data = np.array(
-    [[[0.0 if pixel in labels else 255.0 for pixel in row] for row in matrix] for matrix in data]
-  ).astype(np.float32)
-
-  return binary_data
-
-def resize_3d(data, width, height, depth):
-  in_width, in_height, in_depth = data.shape
-  width_ratio = width / in_width
-  height_ratio = height /in_height
-  depth_ratio = depth / in_depth
-
-  resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio))
-
-  return resized_data
-
-def load_image_data(filename, path='.'):
-  full_path = os.path.join(path, filename)
-  img = nib.load(full_path)
-  img_data = img.get_fdata(dtype=np.float32)
-
-  return img_data
+from common import utils
 
 class MyDataset():
   def __init__(self,
     scans = [],
     labels = [0.0],
-    is_3d = False,
     collection_name = 'mindboggle',
     input_label_niftii = 'aseg-in-t1weighted_2std.nii.gz',
     input_image_niftii = 't1weighted_2std.nii.gz',
-    width=176,
-    height=256,
-    depth=256,
-    batch_size = 1,
+    width=48,
+    height=64,
+    depth=64,
+    batch_size = 32,
     limit = None
   ):
     self.scans = scans
     self.labels = labels
-    self.is_3d = is_3d
     self.collection_name = collection_name
     self.input_label_niftii = input_label_niftii
     self.input_image_niftii = input_image_niftii
@@ -78,23 +42,23 @@ class MyDataset():
 
     print(f'Saving {types} as {data_full_name}.npy')
 
-    norm_data = norm_to_uint8(data)
+    norm_data = utils.norm_to_uint8(data)
 
     # save normalized to uint (0 - 255)
     np.save(data_full_name, norm_data)
 
   def create_image_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_image_niftii}...')
-    image_data = load_image_data(self.input_image_niftii, path)
-    resized_data = resize_3d(image_data, self.width, self.height, self.depth)
+    image_data = utils.load_image_data(self.input_image_niftii, path)
+    resized_data = utils.resize_3d(image_data, self.width, self.height, self.depth)
 
     self.save_3d(resized_data, scan_name, 'images')
 
   def create_label_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_label_niftii}')
-    label_data = load_image_data(self.input_label_niftii, path)
-    binary_data = convert_to_binary_3d(label_data, self.labels)
-    resized_data = resize_3d(binary_data, self.width, self.height, self.depth)
+    label_data = utils.load_image_data(self.input_label_niftii, path)
+    binary_data = utils.convert_to_binary_3d(label_data, self.labels)
+    resized_data = utils.resize_3d(binary_data, self.width, self.height, self.depth)
     resized_data[resized_data > 200.0] = 255.0
     resized_data[resized_data <= 200.0] = 0.0
 
@@ -108,12 +72,8 @@ class MyDataset():
       self.create_label_3d(scan_name, full_path)
 
   def create_test_train_gen(self):
-    if self.is_3d:
-      X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
-      y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.npy'))[:self.limit]
-    else:
-      X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.png'))[:self.limit]
-      y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.png'))[:self.limit]
+    X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
+    y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.npy'))[:self.limit]
 
     X_train, X_test, y_train, y_test = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
 

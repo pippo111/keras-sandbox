@@ -5,6 +5,8 @@ from keras.layers.pooling import MaxPooling3D
 from keras.layers.merge import concatenate
 from keras.optimizers import Adam
 
+from common.utils import pad_to_fit, crop_to_fit
+
 def unet3d(width, height, depth, n_filters, loss_function, batch_norm=False):
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3, 3), activation='relu', padding='same'):
@@ -31,9 +33,10 @@ def unet3d(width, height, depth, n_filters, loss_function, batch_norm=False):
     return x
 
   inputs = Input((width, height, depth, 1))
+  padded = pad_to_fit(inputs)
 
   # Contracting path
-  conv1 = conv_block(inputs, n_filters)
+  conv1 = conv_block(padded, n_filters)
   pool1 = MaxPooling3D(pool_size=(2, 2, 2))(conv1)
 
   conv2 = conv_block(pool1, n_filters*2)
@@ -66,6 +69,7 @@ def unet3d(width, height, depth, n_filters, loss_function, batch_norm=False):
   conv9 = conv_block(up9, n_filters)
 
   outputs = Conv3D(filters=1, kernel_size=(1, 1, 1), activation='sigmoid')(conv9)
+  outputs = crop_to_fit(inputs, outputs)
 
   model = Model(inputs=[inputs], outputs=[outputs])
   model.compile(optimizer=Adam(), loss=loss_function, metrics=['accuracy'])
