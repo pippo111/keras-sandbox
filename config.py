@@ -1,5 +1,5 @@
-arch = 'Unet3d'
-loss_fn = 'dice'
+arch = 'ResUnet3d'
+loss_fn = 'binary'
 axis = 1
 
 # Dataset setup
@@ -11,7 +11,7 @@ dataset = {
   'height': 64,
   'depth': 64,
   'labels': [0.0],
-  'batch_size': 8,
+  'batch_size': 1,
   'limit': None
 }
 
@@ -19,12 +19,12 @@ dataset = {
 model = {
   'arch': arch,
   'loss_fn': loss_fn,  # binary | dice | wce
-  'checkpoint': 'weights.axis_{}_{}_{}'.format(axis, arch, loss_fn),
+  'checkpoint': 'resunet_3d_bn',
   'epochs': 50,
   'batch_size': 8,
   'seed': 1,
   'threshold': 0.5,
-  'filters': 8
+  'filters': 4
 }
 
 # Output result setup

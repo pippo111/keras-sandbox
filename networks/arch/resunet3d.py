@@ -5,7 +5,7 @@ from keras.layers.pooling import MaxPooling3D
 from keras.layers.merge import concatenate, Add
 from keras.optimizers import Adam
 
-def resunet(width, height, depth, n_filters, loss_function):
+def resunet3d(width, height, depth, n_filters, loss_function):
   # Convolutional block: BN -> ReLU -> Conv3x3
   def conv_block(
     inputs,
@@ -13,7 +13,7 @@ def resunet(width, height, depth, n_filters, loss_function):
     kernel_size=(3, 3, 3),
     strides=(1, 1, 1),
     activation='relu',
-    batch_norm=True,
+    batch_norm=False,
     padding='same'
   ):
     if batch_norm:
@@ -33,7 +33,7 @@ def resunet(width, height, depth, n_filters, loss_function):
 
     return x
 
-  inputs = Input((height, width, 1))
+  inputs = Input((width, height, depth, 1))
 
   # Encoding
   short1 = inputs

@@ -27,7 +27,7 @@ my_model = model.MyModel(
 train_generator, test_generator = my_dataset.create_test_train_gen()
 my_model.load()
 predicted = my_model.evaluate(test_generator)
-preds_val_t = (predicted > 0.0).astype(np.uint8)
+preds_val_t = (predicted > 0.5).astype(np.uint8)
 
 test_image, test_mask = test_generator.__getitem__(0)
 
