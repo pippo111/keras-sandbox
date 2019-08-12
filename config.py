@@ -1,6 +1,9 @@
 arch = 'ResUnet3d'
 loss_fn = 'binary'
-axis = 1
+batch_size = 8
+filters = 8
+batch_norm = True
+checkpoint = f'{arch}_{loss_fn}_f{filters}_bs{batch_size}_bn{batch_norm}'
 
 # Dataset setup
 dataset = {
@@ -11,7 +14,6 @@ dataset = {
   'height': 64,
   'depth': 64,
   'labels': [0.0],
-  'batch_size': 1,
   'limit': None
 }
 
@@ -19,12 +21,13 @@ dataset = {
 model = {
   'arch': arch,
   'loss_fn': loss_fn,  # binary | dice | wce
-  'checkpoint': 'resunet_3d_bn',
+  'checkpoint': checkpoint,
   'epochs': 50,
-  'batch_size': 8,
+  'batch_size': batch_size,
   'seed': 1,
   'threshold': 0.5,
-  'filters': 4
+  'filters': filters,
+  'batch_norm': batch_norm
 }
 
 # Output result setup

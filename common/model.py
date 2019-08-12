@@ -10,13 +10,13 @@ class MyModel():
     arch,
     checkpoint,
     loss_function,
+    batch_norm=False,
     width=176,
     height=256,
     depth=256,
     epochs=50,
     filters=16
   ):
-    print(width, height, depth)
     self.arch = arch
     self.checkpoint = checkpoint
     self.epochs = epochs
@@ -24,6 +24,7 @@ class MyModel():
     self.model = network.get(
       name=arch,
       loss_function=loss.get(loss_function),
+      batch_norm=batch_norm,
       width=width,
       height=height,
       depth=depth,
@@ -37,17 +38,19 @@ class MyModel():
     self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
 
   def train(self, train_generator, test_generator):
-    self.model.fit_generator(
+    history = self.model.fit_generator(
       train_generator,
       epochs=self.epochs,
       callbacks=[
         TensorBoard(log_dir=f'output/logs/{time()}-{self.checkpoint}'),
-        EarlyStopping(patience=6, verbose=1),
+        EarlyStopping(patience=10, verbose=1),
         ReduceLROnPlateau(factor=0.1, patience=3, min_lr=0.00001, verbose=1),
         ModelCheckpoint(f'output/models/{self.checkpoint}.hdf5', verbose=1, save_best_only=True, save_weights_only=True)
       ],
       validation_data=test_generator
     )
+
+    return history
     
   def evaluate(self, test_generator):
     history = self.model.evaluate_generator(test_generator, verbose=1)

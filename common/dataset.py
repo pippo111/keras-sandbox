@@ -46,6 +46,7 @@ class MyDataset():
 
     # save normalized to uint (0 - 255)
     np.save(data_full_name, norm_data)
+    print('Done.')
 
   def create_image_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_image_niftii}...')

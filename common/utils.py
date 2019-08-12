@@ -5,6 +5,8 @@ from scipy.ndimage import zoom
 from keras.layers.convolutional import ZeroPadding3D, Cropping3D
 from keras.backend import int_shape
 
+import config as cfg
+
 def norm_to_uint8(data):
   max_value = data.max()
   if not max_value == 0:
@@ -75,3 +77,21 @@ def crop_to_fit(inputs, outputs, n_layers=4):
   x = Cropping3D((w_pad, h_pad, d_pad))(outputs)
   return x
 
+def save_model_setup(val_loss, val_acc):
+  with open(f'output/models/{cfg.model["checkpoint"]}.setup.txt', 'w') as text_file:
+    print(f'Architecture: {cfg.model["arch"]}', file=text_file)
+    print(f'Loss fn: {cfg.model["loss_fn"]}', file=text_file)
+    print(f'Filters: {cfg.model["filters"]}', file=text_file)
+    print(f'Batch size: {cfg.model["batch_size"]}', file=text_file)
+    print(f'Batch normalization: {cfg.model["batch_norm"]}', file=text_file)
+    print('---', file=text_file)
+    print(f'Validation loss: {val_loss[-1]}', file=text_file)
+    print(f'Validation accuracy: {val_acc[-1]}', file=text_file)
+    print(f'Total epochs: {len(val_acc)}', file=text_file)
+    print('---', file=text_file)
+    print(f'Checkpoint: {cfg.model["checkpoint"]}', file=text_file)
+    print(f'Width: {cfg.dataset["width"]}', file=text_file)
+    print(f'Height: {cfg.dataset["height"]}', file=text_file)
+    print(f'Depth: {cfg.dataset["depth"]}', file=text_file)
+    print(f'Epochs: {cfg.model["epochs"]}', file=text_file)
+    

@@ -16,6 +16,7 @@ my_dataset = dataset.MyDataset(
 my_model = model.MyModel(
   arch = cfg.model['arch'],
   loss_function = cfg.model['loss_fn'],
+  batch_norm=cfg.model['batch_norm'],
   checkpoint = cfg.model['checkpoint'],
   width = cfg.dataset['width'],
   height = cfg.dataset['height'],
@@ -27,30 +28,30 @@ my_model = model.MyModel(
 train_generator, test_generator = my_dataset.create_test_train_gen()
 my_model.load()
 predicted = my_model.evaluate(test_generator)
-preds_val_t = (predicted > 0.5).astype(np.uint8)
+preds_bin = (predicted > 0.5).astype(np.uint8)
 
 test_image, test_mask = test_generator.__getitem__(0)
 
 test_image.shape
-image = test_image[1].squeeze()
+image = test_image[0].squeeze()
 print(image.shape)
 
-image_0 = image[20, :, :]
+image_0 = image[25, :, :]
 image_1 = image[:, 20, :]
-image_2 = image[:, :, 20]
+image_2 = image[:, :, 25]
 
 test_mask.shape
-mask = test_mask[1].squeeze()
+mask = test_mask[0].squeeze()
 print(mask.shape)
 
-mask_0 = mask[20, :, :]
+mask_0 = mask[25, :, :]
 mask_1 = mask[:, 20, :]
-mask_2 = mask[:, :, 20]
+mask_2 = mask[:, :, 25]
 
-pred = preds_val_t[1].squeeze()
-pred_0 = pred[20, :, :]
+pred = preds_bin[0].squeeze()
+pred_0 = pred[25, :, :]
 pred_1 = pred[:, 20, :]
-pred_2 = pred[:, :, 20]
+pred_2 = pred[:, :, 25]
 
 fig, ax = plt.subplots(3, 3, figsize=(20, 20))
 
@@ -66,4 +67,4 @@ ax[2][0].imshow(pred_0, cmap='gray')
 ax[2][1].imshow(pred_1, cmap='gray')
 ax[2][2].imshow(pred_2, cmap='gray')
 
-plt.show()
+fig.savefig(f'output/models/{cfg.model["checkpoint"]}.png')
