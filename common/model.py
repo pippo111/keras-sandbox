@@ -1,6 +1,8 @@
 from time import time
 from keras.callbacks import TensorBoard, ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
+import numpy as np
 
+from common.time_callback import TimeHistory
 from networks import network
 from networks import loss
 import config as cfg
@@ -11,6 +13,7 @@ class MyModel():
     checkpoint,
     loss_function,
     batch_norm=False,
+    threshold=0.5,
     width=176,
     height=256,
     depth=256,
@@ -38,10 +41,13 @@ class MyModel():
     self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
 
   def train(self, train_generator, test_generator):
+    time_callback = TimeHistory()
+
     history = self.model.fit_generator(
       train_generator,
       epochs=self.epochs,
       callbacks=[
+        time_callback,
         TensorBoard(log_dir=f'output/logs/{time()}-{self.checkpoint}'),
         EarlyStopping(patience=10, verbose=1),
         ReduceLROnPlateau(factor=0.1, patience=3, min_lr=0.00001, verbose=1),
@@ -50,12 +56,18 @@ class MyModel():
       validation_data=test_generator
     )
 
-    return history
+    times = time_callback.times
+    epoch_time = int(np.mean(times))
+
+    return history, epoch_time
     
   def evaluate(self, test_generator):
     history = self.model.evaluate_generator(test_generator, verbose=1)
-    print(history)
-
-    predicted = self.model.predict_generator(test_generator, verbose=1)
     
-    return predicted
+    return history
+
+  def predict(self, test_generator):
+    X_preds = self.model.predict_generator(test_generator, verbose=1)
+    y_preds = (X_preds > 0.5).astype(np.uint8)
+    
+    return X_preds, y_preds
