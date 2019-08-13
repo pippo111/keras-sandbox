@@ -72,14 +72,14 @@ class MyDataset():
       self.create_image_3d(scan_name, full_path)
       self.create_label_3d(scan_name, full_path)
 
-  def create_test_train_gen(self):
+  def create_train_test_gen(self):
     X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
     y_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'labels', '*.npy'))[:self.limit]
 
     X_train, X_test, y_train, y_test = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
 
     train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size)
-    test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size)
+    test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False)
 
     self.train_generator = train_generator
     self.test_generator = test_generator

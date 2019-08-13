@@ -4,9 +4,10 @@ from keras.utils import Sequence
 
 class DataSequence3d(Sequence):
 
-  def __init__(self, X_set, y_set, batch_size):
+  def __init__(self, X_set, y_set, batch_size, shuffle=True):
     self.X, self.y = X_set, y_set
     self.batch_size = batch_size
+    self.shuffle = shuffle
     self.on_epoch_end()
 
   def __len__(self):
@@ -28,7 +29,8 @@ class DataSequence3d(Sequence):
     
     return batch_X, batch_y
   
-  def on_epoch_end(self):   
-    to_shuffle = list(zip(self.X, self.y))
-    random.shuffle(to_shuffle)
-    self.X, self.y = zip(*to_shuffle)
+  def on_epoch_end(self):
+    if self.shuffle:
+      to_shuffle = list(zip(self.X, self.y))
+      random.shuffle(to_shuffle)
+      self.X, self.y = zip(*to_shuffle)

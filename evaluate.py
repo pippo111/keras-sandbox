@@ -25,7 +25,7 @@ my_model = model.MyModel(
   filters = cfg.model['filters']
 )
 
-train_generator, test_generator = my_dataset.create_test_train_gen()
+train_generator, test_generator = my_dataset.create_train_test_gen()
 my_model.load()
 predicted = my_model.evaluate(test_generator)
 preds_bin = (predicted > 0.5).astype(np.uint8)
