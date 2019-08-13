@@ -4,3 +4,4 @@ keras
 pillow
 matplotlib
 sklearn
+pandas
