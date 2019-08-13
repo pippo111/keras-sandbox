@@ -22,7 +22,7 @@ model = {
   'arch': arch,
   'loss_fn': loss_fn,  # binary | dice | wce
   'checkpoint': checkpoint,
-  'epochs': 50,
+  'epochs': 1,
   'batch_size': batch_size,
   'seed': 1,
   'threshold': 0.5,

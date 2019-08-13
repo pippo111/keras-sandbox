@@ -235,19 +235,19 @@ for setup in setups:
   val_loss, val_acc = my_model.evaluate(test_generator)
   
   # Save model parameters and performance
-  with open(f'output/models/{cfg.model["checkpoint"]}.setup.txt', 'w') as text_file:
-    print(f'Architecture: {cfg.model["arch"]}', file=text_file)
-    print(f'Loss fn: {cfg.model["loss_fn"]}', file=text_file)
-    print(f'Filters: {cfg.model["filters"]}', file=text_file)
-    print(f'Batch size: {cfg.model["batch_size"]}', file=text_file)
-    print(f'Batch normalization: {cfg.model["batch_norm"]}', file=text_file)
+  with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
+    print(f'Architecture: {setup["arch"]}', file=text_file)
+    print(f'Loss fn: {setup["loss_fn"]}', file=text_file)
+    print(f'Filters: {setup["filters"]}', file=text_file)
+    print(f'Batch size: {setup["batch_size"]}', file=text_file)
+    print(f'Batch normalization: {setup["batch_norm"]}', file=text_file)
     print('---', file=text_file)
     print(f'Validation loss: {val_loss}', file=text_file)
     print(f'Validation accuracy: {val_acc}', file=text_file)
     print(f'Total epochs: {epochs}', file=text_file)
     print(f'Time per epoch: {epoch_time}', file=text_file)
     print('---', file=text_file)
-    print(f'Checkpoint: {cfg.model["checkpoint"]}', file=text_file)
+    print(f'Checkpoint: {checkpoint}', file=text_file)
     print(f'Dataset size: {my_dataset.get_count()}', file=text_file)
     print(f'Width: {cfg.dataset["width"]}', file=text_file)
     print(f'Height: {cfg.dataset["height"]}', file=text_file)
