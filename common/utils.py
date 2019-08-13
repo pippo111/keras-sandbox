@@ -74,3 +74,32 @@ def crop_to_fit(inputs, outputs, n_layers=4):
 
   x = Cropping3D((w_pad, h_pad, d_pad))(outputs)
   return x
+
+def calc_confusion_matrix(mask, pred):
+  combined = mask * 2 + pred
+
+  fpr_array = np.array([]) # false positive ratio (reds)
+  fpr_total = np.array([]).astype('int') # false positive total pixels
+  fnr_array = np.array([]) # false negative ratio (yellows)
+  fnr_total = np.array([]).astype('int') # false negative total pixels
+
+  for image in combined:
+    fp = np.count_nonzero(image == 1.0) # false positive (red)
+    fn = np.count_nonzero(image == 2.0) # false negative (yellow)
+    tp = np.count_nonzero(image == 3.0) # true positive (green)
+    tn = np.count_nonzero(image == 0.0) # true negative (black)
+    
+    fpr = fp / (fp + tn) if tn != 0 or fp != 0 else 0
+    fnr = fn / (fn + tp) if tp != 0 or fn != 0 else 0
+
+    fpr_array = np.append(fpr_array, fpr)
+    fpr_total = np.append(fpr_total, fp)
+    fnr_array = np.append(fnr_array, fnr)
+    fnr_total = np.append(fnr_total, fn)
+
+  fpr_perc = '{:.0%}'.format(fpr_array.mean())
+  fpr_sum = fpr_total.sum()
+  fnr_perc = '{:.0%}'.format(fnr_array.mean())
+  fnr_sum = fnr_total.sum()
+
+  return fpr_perc, fnr_perc, fpr_sum, fnr_sum

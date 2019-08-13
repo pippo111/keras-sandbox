@@ -1,9 +1,9 @@
-import matplotlib
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from common import model
 from common import dataset
+from common import plots
+from common import utils
 import config as cfg
 
 setups = [
@@ -209,6 +209,10 @@ params = {
     'batch_norm': pd.Series(),
     'val_loss': pd.Series(),
     'val_acc': pd.Series(),
+    'fp_rate': pd.Series(),
+    'fn_rate': pd.Series(),
+    'fp_total': pd.Series(),
+    'fn_total': pd.Series(),
     'total_epochs': pd.Series(),
     'time_per_epoch': pd.Series(),
     'dataset_size': pd.Series(),
@@ -252,6 +256,16 @@ for setup in setups:
     val_loss, val_acc = my_model.evaluate(test_generator)
     ds_size = my_dataset.get_count()
     
+    X_preds, y_preds = my_model.predict(test_generator)
+    X_test, y_test = test_generator.__getitem__(0)
+    
+    image = X_test[0].squeeze()
+    mask = y_test[0].squeeze()
+    pred = y_preds[0].squeeze()
+
+    # calculate false and true positive and negative
+    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(mask, pred)
+
     # Save model parameters and performance
     with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
         print(f'Architecture: {setup["arch"]}', file=text_file)
@@ -262,6 +276,10 @@ for setup in setups:
         print('---', file=text_file)
         print(f'Validation loss: {val_loss}', file=text_file)
         print(f'Validation accuracy: {val_acc}', file=text_file)
+        print(f'False positive rate: {fp_rate}', file=text_file)
+        print(f'False negative rate: {fn_rate}', file=text_file)
+        print(f'False positive total px: {fp_total}', file=text_file)
+        print(f'False negative total px: {fn_total}', file=text_file)
         print(f'Total epochs: {epochs}', file=text_file)
         print(f'Time per epoch: {epoch_time}', file=text_file)
         print('---', file=text_file)
@@ -279,6 +297,10 @@ for setup in setups:
     params['batch_norm'][checkpoint] = setup['batch_norm']
     params['val_loss'][checkpoint] = val_loss
     params['val_acc'][checkpoint] = val_acc
+    params['fp_rate'][checkpoint] = fp_rate
+    params['fn_rate'][checkpoint] = fn_rate
+    params['fp_total'][checkpoint] = fp_total
+    params['fn_total'][checkpoint] = fn_total
     params['total_epochs'][checkpoint] = epochs
     params['time_per_epoch'][checkpoint] = epoch_time
     params['dataset_size'][checkpoint] = ds_size
@@ -288,37 +310,6 @@ for setup in setups:
 
     output = pd.DataFrame(params)
     output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
-    
-    X_preds, y_preds = my_model.predict(test_generator)
-    X_test, y_test = test_generator.__getitem__(0)
-    
-    image = X_test[0].squeeze()
-    image_0 = image[25, :, :]
-    image_1 = image[:, 20, :]
-    image_2 = image[:, :, 25]
-    
-    mask = y_test[0].squeeze()
-    mask_0 = mask[25, :, :]
-    mask_1 = mask[:, 20, :]
-    mask_2 = mask[:, :, 25]
-    
-    pred = y_preds[0].squeeze()
-    pred_0 = pred[25, :, :]
-    pred_1 = pred[:, 20, :]
-    pred_2 = pred[:, :, 25]
-    
-    fig, ax = plt.subplots(3, 3, figsize=(20, 20))
-    
-    ax[0][0].imshow(image_0, cmap='gray')
-    ax[0][1].imshow(image_1, cmap='gray')
-    ax[0][2].imshow(image_2, cmap='gray')
-    
-    ax[1][0].imshow(mask_0, cmap='gray')
-    ax[1][1].imshow(mask_1, cmap='gray')
-    ax[1][2].imshow(mask_2, cmap='gray')
-    
-    ax[2][0].imshow(pred_0, cmap='gray')
-    ax[2][1].imshow(pred_1, cmap='gray')
-    ax[2][2].imshow(pred_2, cmap='gray')
-    
-    fig.savefig(f'output/models/{checkpoint}.png')
+
+    # save plot with sample image and result mask
+    plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')

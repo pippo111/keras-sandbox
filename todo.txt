@@ -1,3 +1,5 @@
 - cleanup config
 - code refactor
-- create csv
+- default values
+- data augmentation
+- append csv
