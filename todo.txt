@@ -1,1 +1,3 @@
-- save model setup and summary in model class
+- cleanup config
+- code refactor
+- create csv

@@ -248,6 +248,7 @@ for setup in setups:
     print(f'Time per epoch: {epoch_time}', file=text_file)
     print('---', file=text_file)
     print(f'Checkpoint: {cfg.model["checkpoint"]}', file=text_file)
+    print(f'Dataset size: {my_dataset.get_count()}', file=text_file)
     print(f'Width: {cfg.dataset["width"]}', file=text_file)
     print(f'Height: {cfg.dataset["height"]}', file=text_file)
     print(f'Depth: {cfg.dataset["depth"]}', file=text_file)

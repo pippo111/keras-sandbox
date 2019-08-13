@@ -85,3 +85,7 @@ class MyDataset():
     self.test_generator = test_generator
 
     return train_generator, test_generator
+
+  def get_count(self):
+    X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
+    return len(X_files)
