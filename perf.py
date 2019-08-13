@@ -264,7 +264,7 @@ for setup in setups:
     pred = y_preds[0].squeeze()
 
     # calculate false and true positive and negative
-    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(mask, pred)
+    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(y_test.squeeze(), y_preds.squeeze())
 
     # Save model parameters and performance
     with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
