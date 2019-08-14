@@ -257,14 +257,17 @@ for setup in setups:
     ds_size = my_dataset.get_count()
     
     X_preds, y_preds = my_model.predict(test_generator)
-    X_test, y_test = test_generator.__getitem__(0)
-    
+    X_test, y_test = utils.get_all_gen_items(test_generator)
+
+    # calculate false and true positive and negative
+    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(y_test, y_preds)
+
+    # save plot with sample image and result mask
     image = X_test[0].squeeze()
     mask = y_test[0].squeeze()
     pred = y_preds[0].squeeze()
 
-    # calculate false and true positive and negative
-    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(y_test.squeeze(), y_preds.squeeze())
+    plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')
 
     # Save model parameters and performance
     with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
@@ -310,6 +313,3 @@ for setup in setups:
 
     output = pd.DataFrame(params)
     output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
-
-    # save plot with sample image and result mask
-    plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')
