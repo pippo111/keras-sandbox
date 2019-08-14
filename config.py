@@ -7,7 +7,7 @@ checkpoint = f'{arch}_{loss_fn}_f{filters}_bs{batch_size}_bn{batch_norm}'
 
 # Dataset setup
 dataset = {
-  'collection_name': 'mindboggle_60_64x64x48',
+  'collection_name': 'mindboggle_84_64x64x48',
   'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
   'input_image_niftii': 't1weighted_2std.nii.gz',
   'width': 48,
