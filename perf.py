@@ -224,6 +224,11 @@ params = {
 for setup in setups:
     checkpoint = f'{setup["arch"]}_{setup["loss_fn"]}_f{setup["filters"]}_bs{setup["batch_size"]}_bn{setup["batch_norm"]}'
 
+    models = ['Unet3d_dice_f8_bs4_bnTrue']
+
+    if checkpoint not in models:
+        continue
+
     # Grab dataset
     my_dataset = dataset.MyDataset(
         collection_name = cfg.dataset['collection_name'],
@@ -249,10 +254,13 @@ for setup in setups:
     my_model.get_model_summary()
 
     # Train model
-    history, epoch_time = my_model.train(train_generator, test_generator)
-    epochs = len(history.history['val_loss'])
+    # history, epoch_time = my_model.train(train_generator, test_generator)
+    # epochs = len(history.history['val_loss'])
+    epoch_time = '?'
+    epochs = '?'
 
     # Validate model
+    my_model.load()
     val_loss, val_acc = my_model.evaluate(test_generator)
     ds_size = my_dataset.get_count()
     

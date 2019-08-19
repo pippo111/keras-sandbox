@@ -78,8 +78,8 @@ class MyDataset():
 
     X_train, X_test, y_train, y_test = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
 
-    train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size)
-    test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False)
+    train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=True)
+    test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
 
     self.train_generator = train_generator
     self.test_generator = test_generator

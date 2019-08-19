@@ -1,7 +1,8 @@
 import numpy as np
 import os
 import nibabel as nib
-from scipy.ndimage import zoom
+import random
+from scipy.ndimage import zoom, rotate, shift
 from keras.layers.convolutional import ZeroPadding3D, Cropping3D
 from keras.backend import int_shape
 
@@ -30,6 +31,22 @@ def resize_3d(data, width, height, depth):
     resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio), order=0)
 
     return resized_data
+
+def augment_3d(x, y):
+    rotate_range = 5
+    shift_range = 0.1
+
+    random_rotate = random.randint(0, rotate_range)
+    random_shift = random.uniform(0.0, shift_range)
+    shift_px = round(x.shape[0] * random_shift)
+
+    x = rotate(x, random_rotate, order=0, reshape=False)
+    y = rotate(y, random_rotate, order=0, reshape=False)
+
+    x = shift(x, (shift_px, 0, 0), order=0)
+    y = shift(y, (shift_px, 0, 0), order=0)
+
+    return x, y
 
 def load_image_data(filename, path='.'):
     full_path = os.path.join(path, filename)
