@@ -1,7 +1,7 @@
 import time
-import keras.callbacks
+from keras.callbacks import Callback
 
-class TimeHistory(keras.callbacks.Callback):
+class TimeHistory(Callback):
   def on_train_begin(self, logs={}):
       self.times = []
 
