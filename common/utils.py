@@ -17,7 +17,7 @@ def norm_to_uint8(data):
 
 def convert_to_binary_3d(data, labels):
     binary_data = np.array(
-        [[[0.0 if pixel in labels else 255.0 for pixel in row] for row in matrix] for matrix in data]
+        [[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]
     ).astype(np.float32)
 
     return binary_data

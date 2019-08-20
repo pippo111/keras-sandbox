@@ -3,201 +3,26 @@ import pandas as pd
 from common import model
 from common import dataset
 from common import plots
-from common import utils
+from common.utils import get_all_gen_items, calc_confusion_matrix
+from common.logs import to_table
 import config as cfg
 
 setups = [
     {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True
-    },
-    {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
     },
     {
         'arch': 'ResUnet3d', 'loss_fn': 'binary',
         'batch_size': 8, 'filters': 8, 'batch_norm': False
     },
     {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': True
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
     },
     {
         'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 8, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 1, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 16, 'batch_norm': True
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 16, 'batch_norm': False
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'dice',
-        'batch_size': 8, 'filters': 16, 'batch_norm': True
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
     }
 ]
 
@@ -224,11 +49,6 @@ params = {
 for setup in setups:
     checkpoint = f'{setup["arch"]}_{setup["loss_fn"]}_f{setup["filters"]}_bs{setup["batch_size"]}_bn{setup["batch_norm"]}'
 
-    models = ['Unet3d_dice_f8_bs4_bnTrue']
-
-    if checkpoint not in models:
-        continue
-
     # Grab dataset
     my_dataset = dataset.MyDataset(
         collection_name = cfg.dataset['collection_name'],
@@ -254,21 +74,21 @@ for setup in setups:
     my_model.get_model_summary()
 
     # Train model
-    # history, epoch_time = my_model.train(train_generator, test_generator)
-    # epochs = len(history.history['val_loss'])
-    epoch_time = '?'
-    epochs = '?'
+    history, epoch_time = my_model.train(train_generator, test_generator)
+    epochs = len(history.history['val_loss'])
+    # epoch_time = '?'
+    # epochs = '?'
 
     # Validate model
-    my_model.load()
+    # my_model.load()
     val_loss, val_acc = my_model.evaluate(test_generator)
     ds_size = my_dataset.get_count()
     
     X_preds, y_preds = my_model.predict(test_generator)
-    X_test, y_test = utils.get_all_gen_items(test_generator)
+    X_test, y_test = get_all_gen_items(test_generator)
 
     # calculate false and true positive and negative
-    fp_rate, fn_rate, fp_total, fn_total = utils.calc_confusion_matrix(y_test, y_preds)
+    fp_rate, fn_rate, fp_total, fn_total = calc_confusion_matrix(y_test, y_preds)
 
     # save plot with sample image and result mask
     image = X_test[0].squeeze()
@@ -300,7 +120,6 @@ for setup in setups:
         print(f'Height: {cfg.dataset["height"]}', file=text_file)
         print(f'Depth: {cfg.dataset["depth"]}', file=text_file)
 
-    # save csv
     params['arch'][checkpoint] = setup['arch']
     params['loss_fn'][checkpoint] = setup['loss_fn']
     params['batch_size'][checkpoint] = setup['batch_size']
@@ -320,4 +139,9 @@ for setup in setups:
     params['depth'][checkpoint] = cfg.dataset['depth']
 
     output = pd.DataFrame(params)
+
+    # Save as csv
     output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
+
+    # Save as html interactive table
+    to_table(output.to_html(), f'output/models/{cfg.dataset["collection_name"]}_summary.html')
