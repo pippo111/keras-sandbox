@@ -1,5 +1,4 @@
 - cleanup config
 - code refactor
 - default values
-- data augmentation
 - append csv
