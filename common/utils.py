@@ -16,11 +16,12 @@ def norm_to_uint8(data):
     return img
 
 def convert_to_binary_3d(data, labels):
-    binary_data = np.array(
-        [[[255.0 if pixel in labels else 0.0 for pixel in row] for row in matrix] for matrix in data]
-    ).astype(np.float32)
+    for label in labels:
+        data[data == label] = 255.0
 
-    return binary_data
+    data[data != 255.0] = 0.0
+
+    return data.astype(np.float32)
 
 def resize_3d(data, width, height, depth):
     in_width, in_height, in_depth = data.shape

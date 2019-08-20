@@ -9,7 +9,7 @@ from common import utils
 class MyDataset():
   def __init__(self,
     scans = [],
-    labels = [0.0],
+    labels = [255.0],
     collection_name = 'mindboggle',
     input_label_niftii = 'aseg-in-t1weighted_2std.nii.gz',
     input_image_niftii = 't1weighted_2std.nii.gz',
@@ -60,8 +60,6 @@ class MyDataset():
     label_data = utils.load_image_data(self.input_label_niftii, path)
     binary_data = utils.convert_to_binary_3d(label_data, self.labels)
     resized_data = utils.resize_3d(binary_data, self.width, self.height, self.depth)
-    resized_data[resized_data > 200.0] = 255.0
-    resized_data[resized_data <= 200.0] = 0.0
 
     self.save_3d(resized_data, scan_name, 'labels')
 
