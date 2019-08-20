@@ -10,20 +10,199 @@ import config as cfg
 setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': False
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': False
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
     },
     {
         'arch': 'Unet3d', 'loss_fn': 'dice',
         'batch_size': 4, 'filters': 8, 'batch_norm': False
     },
     {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+    
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
+    },
+    {
         'arch': 'ResUnet3d', 'loss_fn': 'dice',
         'batch_size': 4, 'filters': 8, 'batch_norm': True
-    }
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True
+    },
+
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
+    
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 8, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 16, 'batch_norm': False
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'dice',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
+    {
+        'arch': 'ResUnet3d', 'loss_fn': 'wce',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True
+    },
 ]
 
 params = {

@@ -12,12 +12,12 @@ checkpoint = f'{arch}_{loss_fn}_f{filters}_bs{batch_size}_bn{batch_norm}'
 
 # Dataset setup
 dataset = {
-  'collection_name': 'mindboggle_84_64x64x48_brain',
+  'collection_name': 'mindboggle_84_128x128x96_lr_lateral_ventricles',
   'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
   'input_image_niftii': 't1weighted_2std.nii.gz',
-  'width': 48,
-  'height': 64,
-  'depth': 64,
+  'width': 96,
+  'height': 128,
+  'depth': 128,
   'labels': [4.0, 43.0],
   'limit': None
 }
