@@ -50,11 +50,9 @@ class ReinitWeightOnFalseStart(Callback):
     def on_epoch_end(self, epoch, logs={}):
         current = round(logs.get('val_loss'), 5)
 
-        if current < self._alltime_best:
-            self._alltime_best = current
-
         print('tries: ', self._tries, ', wait: ', self._wait)
         print('current: ', current, ', best: ', self._best)
+        print('alltime best', self._alltime_best)
 
         if self._monitor:
             if current >= self._best:
@@ -76,6 +74,8 @@ class ReinitWeightOnFalseStart(Callback):
                     self._tries += 1
 
             else:
+                self._alltime_best = current
+                
                 if self._restarted:
                     self._best = current
                     self._restarted = False
