@@ -43,11 +43,15 @@ class ReinitWeightOnFalseStart(Callback):
         self._monitor = True
         self._restarted = True
         self._best = np.Inf
+        self._alltime_best = np.Inf
         self._wait = 0
         self._tries = 0
 
     def on_epoch_end(self, epoch, logs={}):
         current = round(logs.get('val_loss'), 5)
+
+        if current < self._alltime_best:
+            self._alltime_best = current
 
         print('tries: ', self._tries, ', wait: ', self._wait)
         print('current: ', current, ', best: ', self._best)
@@ -82,14 +86,14 @@ class ReinitWeightOnFalseStart(Callback):
                     self._wait = 0
 
         else:
-            if current >= self._best:
+            if current >= self._alltime_best:
                 self._wait += 1
 
-                if self._wait == self.checks:
+                if self._wait > self.checks:
                     if self.verbose > 0:
                         print('\nReinitWeightOnFalseStart: Model is not improving from the start. Stopping.')
                     self.model.stop_training = True
                     return
             else:
-                self._best = current
+                self._alltime_best = current
                 self._wait = 0

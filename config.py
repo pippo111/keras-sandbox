@@ -5,12 +5,12 @@
 
 # Dataset common setup
 dataset = {
-    'collection_name': 'mindboggle_84_128x128x96_lr_lateral_ventricles',
+    'collection_name': 'mindboggle_84_64x64x48_lr_lateral_ventricles',
     'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
     'input_image_niftii': 't1weighted_2std.nii.gz',
-    'width': 96,
-    'height': 128,
-    'depth': 128,
+    'width': 48,
+    'height': 64,
+    'depth': 64,
     'labels': [4.0, 43.0],
     'limit': None
 }

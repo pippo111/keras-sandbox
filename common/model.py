@@ -52,7 +52,7 @@ class MyModel():
         ReinitWeightOnFalseStart(patience=3, trials=1, checks=10, verbose=1),
         # TensorBoard(log_dir=f'output/logs/{time()}-{self.checkpoint}'),
         # EarlyStopping(patience=10, verbose=1),
-        ReduceLROnPlateau(factor=0.1, patience=3, min_lr=0.00001, verbose=1),
+        ReduceLROnPlateau(factor=0.1, patience=6, min_lr=0.00001, verbose=1),
         ModelCheckpoint(f'output/models/{self.checkpoint}.hdf5', verbose=1, save_best_only=True)
       ],
       validation_data=test_generator
