@@ -48,7 +48,7 @@ class ReinitWeightOnFalseStart(Callback):
         self._tries = 0
 
     def on_epoch_end(self, epoch, logs={}):
-        current = round(logs.get('val_loss'), 5)
+        current = logs.get('val_loss')
 
         print('tries: ', self._tries, ', wait: ', self._wait)
         print('current: ', current, ', best: ', self._best)
