@@ -3,9 +3,8 @@ from keras.layers import Input, Dropout, BatchNormalization, Activation
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
 from keras.layers.merge import concatenate
-from keras.optimizers import Adam
 
-def unet(width, height, depth, n_filters, loss_function, batch_norm=False):
+def unet(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm=False):
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3), activation='relu', padding='same'):
     x = Conv2D(
@@ -68,9 +67,9 @@ def unet(width, height, depth, n_filters, loss_function, batch_norm=False):
   outputs = Conv2D(filters=1, kernel_size=(1, 1), activation='sigmoid')(conv9)
 
   model = Model(inputs=[inputs], outputs=[outputs])
-  model.compile(optimizer=Adam(), loss=loss_function, metrics=['accuracy'])
+  model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])
 
   return model
 
-def unet_bn(width, height, depth, n_filters, loss_function):
-  return unet(width, height, depth, n_filters, loss_function, batch_norm=True)
+def unet_bn(width, height, depth, n_filters, loss_function, optimizer_function):
+  return unet(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm=True)

@@ -3,9 +3,8 @@ from keras.layers import Input, Dropout, BatchNormalization, Activation
 from keras.layers.convolutional import Conv3D, Conv3DTranspose
 from keras.layers.pooling import MaxPooling3D
 from keras.layers.merge import concatenate, Add
-from keras.optimizers import Adam
 
-def resunet3d(width, height, depth, n_filters, loss_function, batch_norm):
+def resunet3d(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm):
   # Convolutional block: BN -> ReLU -> Conv3x3
   def conv_block(
     inputs,
@@ -89,6 +88,6 @@ def resunet3d(width, height, depth, n_filters, loss_function, batch_norm):
   outputs = Conv3D(filters=1, kernel_size=(1, 1, 1), activation='sigmoid') (conv7)
 
   model = Model(inputs=[inputs], outputs=[outputs])
-  model.compile(optimizer=Adam(), loss=loss_function, metrics=['accuracy'])
+  model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])
 
   return model

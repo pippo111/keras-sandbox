@@ -10,6 +10,7 @@ import config as cfg
 params = {
     'arch': pd.Series(),
     'loss_fn': pd.Series(),
+    'optimizer_fn': pd.Series(),
     'batch_size': pd.Series(),
     'filters': pd.Series(),
     'batch_norm': pd.Series(),
@@ -40,6 +41,7 @@ for setup in cfg.setups:
     my_model = model.MyModel(
         arch = setup['arch'],
         loss_function = setup['loss_fn'],
+        optimizer_function = setup['optimizer_fn'],
         batch_norm = setup['batch_norm'],
         filters = setup['filters'],
         threshold=cfg.model['threshold'],
@@ -79,30 +81,31 @@ for setup in cfg.setups:
     plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')
 
     # Save model parameters and performance
-    with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
-        print(f'Architecture: {setup["arch"]}', file=text_file)
-        print(f'Loss fn: {setup["loss_fn"]}', file=text_file)
-        print(f'Filters: {setup["filters"]}', file=text_file)
-        print(f'Batch size: {setup["batch_size"]}', file=text_file)
-        print(f'Batch normalization: {setup["batch_norm"]}', file=text_file)
-        print('---', file=text_file)
-        print(f'Validation loss: {val_loss}', file=text_file)
-        print(f'Validation accuracy: {val_acc}', file=text_file)
-        print(f'False positive rate: {fp_rate}', file=text_file)
-        print(f'False negative rate: {fn_rate}', file=text_file)
-        print(f'False positive total px: {fp_total}', file=text_file)
-        print(f'False negative total px: {fn_total}', file=text_file)
-        print(f'Total epochs: {epochs}', file=text_file)
-        print(f'Time per epoch: {epoch_time}', file=text_file)
-        print('---', file=text_file)
-        print(f'Checkpoint: {checkpoint}', file=text_file)
-        print(f'Dataset size: {ds_size}', file=text_file)
-        print(f'Width: {cfg.dataset["width"]}', file=text_file)
-        print(f'Height: {cfg.dataset["height"]}', file=text_file)
-        print(f'Depth: {cfg.dataset["depth"]}', file=text_file)
+    # with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
+    #     print(f'Architecture: {setup["arch"]}', file=text_file)
+    #     print(f'Loss fn: {setup["loss_fn"]}', file=text_file)
+    #     print(f'Filters: {setup["filters"]}', file=text_file)
+    #     print(f'Batch size: {setup["batch_size"]}', file=text_file)
+    #     print(f'Batch normalization: {setup["batch_norm"]}', file=text_file)
+    #     print('---', file=text_file)
+    #     print(f'Validation loss: {val_loss}', file=text_file)
+    #     print(f'Validation accuracy: {val_acc}', file=text_file)
+    #     print(f'False positive rate: {fp_rate}', file=text_file)
+    #     print(f'False negative rate: {fn_rate}', file=text_file)
+    #     print(f'False positive total px: {fp_total}', file=text_file)
+    #     print(f'False negative total px: {fn_total}', file=text_file)
+    #     print(f'Total epochs: {epochs}', file=text_file)
+    #     print(f'Time per epoch: {epoch_time}', file=text_file)
+    #     print('---', file=text_file)
+    #     print(f'Checkpoint: {checkpoint}', file=text_file)
+    #     print(f'Dataset size: {ds_size}', file=text_file)
+    #     print(f'Width: {cfg.dataset["width"]}', file=text_file)
+    #     print(f'Height: {cfg.dataset["height"]}', file=text_file)
+    #     print(f'Depth: {cfg.dataset["depth"]}', file=text_file)
 
     params['arch'][checkpoint] = setup['arch']
     params['loss_fn'][checkpoint] = setup['loss_fn']
+    params['optimizer_fn'][checkpoint] = setup['optimizer_fn']
     params['batch_size'][checkpoint] = setup['batch_size']
     params['filters'][checkpoint] = setup['filters']
     params['batch_norm'][checkpoint] = setup['batch_norm']
