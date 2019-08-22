@@ -16,6 +16,7 @@ class MyDataset():
     width=48,
     height=64,
     depth=64,
+    slice_depth=8,
     batch_size = 32,
     limit = None
   ):
@@ -28,6 +29,7 @@ class MyDataset():
     self.width = width
     self.height = height
     self.depth = depth
+    self.slice_depth = slice_depth
     self.limit = limit
 
     self.in_dataset_dir = './input/niftii'
@@ -51,17 +53,28 @@ class MyDataset():
   def create_image_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_image_niftii}...')
     image_data = utils.load_image_data(self.input_image_niftii, path)
-    resized_data = utils.resize_3d(image_data, self.width, self.height, self.depth)
+    prepared_data = utils.resize_3d(image_data, self.width, self.height, self.depth)
 
-    self.save_3d(resized_data, scan_name, 'images')
+    if self.slice_depth:
+      for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
+        sliced_data = prepared_data[:,:,i : i + self.slice_depth]
+        self.save_3d(sliced_data, f'{scan_name}_{slice_no}', 'images')
+    else:
+      self.save_3d(prepared_data, scan_name, 'images')
+
 
   def create_label_3d(self, scan_name, path):
     print(f'Loading from {path}/{self.input_label_niftii}')
     label_data = utils.load_image_data(self.input_label_niftii, path)
-    binary_data = utils.convert_to_binary_3d(label_data, self.labels)
-    resized_data = utils.resize_3d(binary_data, self.width, self.height, self.depth)
-
-    self.save_3d(resized_data, scan_name, 'labels')
+    prepared_data = utils.convert_to_binary_3d(label_data, self.labels)
+    prepared_data = utils.resize_3d(prepared_data, self.width, self.height, self.depth)
+    
+    if self.slice_depth:
+      for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
+        sliced_data = prepared_data[:,:,i : i + self.slice_depth]
+        self.save_3d(sliced_data, f'{scan_name}_{slice_no}', 'labels')
+    else:
+      self.save_3d(prepared_data, scan_name, 'labels')
 
   # Public api
   def create_dataset_3d(self):

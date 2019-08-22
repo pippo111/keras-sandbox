@@ -5,3 +5,4 @@ pillow
 matplotlib
 sklearn
 pandas
+keras-rectified-adam

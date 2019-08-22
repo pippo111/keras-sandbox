@@ -25,7 +25,8 @@ params = {
     'dataset_size': pd.Series(),
     'width': pd.Series(),
     'height': pd.Series(),
-    'depth': pd.Series()
+    'depth': pd.Series(),
+    'slice_depth': pd.Series()
 }
 
 for setup in cfg.setups:
@@ -49,6 +50,7 @@ for setup in cfg.setups:
         width = cfg.dataset['width'],
         height = cfg.dataset['height'],
         depth = cfg.dataset['depth'],
+        slice_depth = cfg.dataset['slice_depth'],
         epochs = cfg.model['epochs']
     )
 
@@ -80,29 +82,6 @@ for setup in cfg.setups:
 
     plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')
 
-    # Save model parameters and performance
-    # with open(f'output/models/{checkpoint}.setup.txt', 'w') as text_file:
-    #     print(f'Architecture: {setup["arch"]}', file=text_file)
-    #     print(f'Loss fn: {setup["loss_fn"]}', file=text_file)
-    #     print(f'Filters: {setup["filters"]}', file=text_file)
-    #     print(f'Batch size: {setup["batch_size"]}', file=text_file)
-    #     print(f'Batch normalization: {setup["batch_norm"]}', file=text_file)
-    #     print('---', file=text_file)
-    #     print(f'Validation loss: {val_loss}', file=text_file)
-    #     print(f'Validation accuracy: {val_acc}', file=text_file)
-    #     print(f'False positive rate: {fp_rate}', file=text_file)
-    #     print(f'False negative rate: {fn_rate}', file=text_file)
-    #     print(f'False positive total px: {fp_total}', file=text_file)
-    #     print(f'False negative total px: {fn_total}', file=text_file)
-    #     print(f'Total epochs: {epochs}', file=text_file)
-    #     print(f'Time per epoch: {epoch_time}', file=text_file)
-    #     print('---', file=text_file)
-    #     print(f'Checkpoint: {checkpoint}', file=text_file)
-    #     print(f'Dataset size: {ds_size}', file=text_file)
-    #     print(f'Width: {cfg.dataset["width"]}', file=text_file)
-    #     print(f'Height: {cfg.dataset["height"]}', file=text_file)
-    #     print(f'Depth: {cfg.dataset["depth"]}', file=text_file)
-
     params['arch'][checkpoint] = setup['arch']
     params['loss_fn'][checkpoint] = setup['loss_fn']
     params['optimizer_fn'][checkpoint] = setup['optimizer_fn']
@@ -121,6 +100,7 @@ for setup in cfg.setups:
     params['width'][checkpoint] = cfg.dataset['width']
     params['height'][checkpoint] = cfg.dataset['height']
     params['depth'][checkpoint] = cfg.dataset['depth']
+    params['slice_depth'][checkpoint] = cfg.dataset['slice_depth']
 
     output = pd.DataFrame(params)
 

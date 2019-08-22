@@ -10,6 +10,7 @@ my_dataset = dataset.MyDataset(
   width=cfg.dataset['width'],
   height=cfg.dataset['height'],
   depth=cfg.dataset['depth'],
+  slice_depth=cfg.dataset['slice_depth'],
   scans=cfg.scans
 )
 my_dataset.create_dataset_3d()

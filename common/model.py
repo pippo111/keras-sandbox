@@ -20,6 +20,7 @@ class MyModel():
     width=176,
     height=256,
     depth=256,
+    slice_depth=None,
     epochs=50,
     filters=16
   ):
@@ -34,7 +35,7 @@ class MyModel():
       batch_norm=batch_norm,
       width=width,
       height=height,
-      depth=depth,
+      depth=slice_depth or depth,
       n_filters=filters
     )
 
