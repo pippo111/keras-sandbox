@@ -1,14 +1,13 @@
 <script>
         var tf = new TableFilter(document.querySelector('.dataframe'), {
             base_path: 'http://filip.vot.pl/TableFilter/dist/tablefilter/',
+            col_1: 'checklist',
             col_2: 'checklist',
             col_3: 'checklist',
             col_4: 'checklist',
             col_5: 'checklist',
-            col_6: 'checklist',
-            col_7: 'select',
+            col_6: 'select',
             col_types: [
-                'number',
                 'string',
                 'string',
                 'string',
@@ -16,6 +15,7 @@
                 'number',
                 'number',
                 'string',
+                'number',
                 'number',
                 'number',
                 'number',
@@ -30,13 +30,13 @@
                 'number'
             ],
             col_widths: [
-                '15px',
                 'null',
                 '140px',
-                '140px',
-                '140px',
-                '100px',
-                '100px',
+                '120px',
+                '120px',
+                '120px',
+                '120px',
+                '120px',
                 'null',
                 'null',
                 'null',

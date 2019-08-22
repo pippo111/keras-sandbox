@@ -36,21 +36,21 @@ setups = [
         'batch_size': 1, 'filters': 8, 'batch_norm': False,
         'optimizer_fn': 'Adam'
     },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    }
+    # {
+    #     'arch': 'Unet3d', 'loss_fn': 'binary',
+    #     'batch_size': 1, 'filters': 8, 'batch_norm': True,
+    #     'optimizer_fn': 'Adam'
+    # },
+    # {
+    #     'arch': 'Unet3d', 'loss_fn': 'binary',
+    #     'batch_size': 2, 'filters': 8, 'batch_norm': True,
+    #     'optimizer_fn': 'Adam'
+    # },
+    # {
+    #     'arch': 'Unet3d', 'loss_fn': 'binary',
+    #     'batch_size': 4, 'filters': 8, 'batch_norm': True,
+    #     'optimizer_fn': 'Adam'
+    # }
 ]
 
 scans = [
