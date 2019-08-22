@@ -15,6 +15,14 @@ def norm_to_uint8(data):
     img = data.astype(np.uint8)
     return img
 
+def norm_to_float32(data):
+    max_value = data.max()
+    if not max_value == 0:
+        data = data / max_value
+
+    img = data.astype(np.uint8)
+    return img
+
 def convert_to_binary_3d(data, labels):
     for label in labels:
         data[data == label] = 255.0
