@@ -81,7 +81,12 @@ for setup in cfg.setups:
     mask = y_test[0].squeeze()
     pred = y_preds[0].squeeze()
 
-    plots.save_sample_plot(image, mask, pred, filename=f'output/models/{checkpoint}.png')
+    plots.save_sample_plot(
+        image,
+        mask,
+        pred,
+        filename=f'output/models/{checkpoint}.png',
+        patch=(cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']))
 
     params['arch'][checkpoint] = setup['arch']
     params['loss_fn'][checkpoint] = setup['loss_fn']

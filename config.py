@@ -5,15 +5,15 @@
 
 # Dataset common setup
 dataset = {
-    'collection_name': 'mindboggle_84_256x256x192_brain_slice_8_float32',
+    'collection_name': 'mindboggle_84_64x64x48_lateral_ventricle',
     'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
     'input_image_niftii': 't1weighted_2std.nii.gz',
-    'width': 192,
-    'height': 256,
-    'depth': 256,
-    'slice_depth': 8,
+    'width': 48,
+    'height': 64,
+    'depth': 64,
+    'slice_depth': None,
     'labels': [4.0, 43.0],
-    'limit': 670
+    'limit': 48
 }
 
 # Models common setup
@@ -21,6 +21,12 @@ model = {
     'epochs': 50,
     'seed': 1,
     'threshold': 0.5
+}
+
+logs = {
+    'axis_0': 27,
+    'axis_1': 26,
+    'axis_2': 42
 }
 
 # Model different parameters
@@ -31,124 +37,19 @@ setups = [
         'optimizer_fn': 'Adam'
     },
     {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 8, 'batch_norm': False,
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 1, 'filters': 8, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    # ----
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    # ----
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True,
+        'batch_size': 2, 'filters': 8, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
         'batch_size': 4, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
-    },
-    # -------------------------
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 16, 'batch_norm': False,
         'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 2, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    # ----
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': False,
-        'optimizer_fn': 'RAdam'
-    },
-    # ----
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
-    },
-    {
-        'arch': 'ResUnet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
     }
 ]
 

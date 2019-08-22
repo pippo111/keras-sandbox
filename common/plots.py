@@ -2,18 +2,20 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-def save_sample_plot(image, mask, pred, filename):
-    image_0 = np.rot90(image[27, :, :])
-    image_1 = np.rot90(image[:, 26, :])
-    image_2 = np.rot90(image[:, :, 4])
+def save_sample_plot(image, mask, pred, filename, patch):
+    axis0, axis1, axis2 = patch
+
+    image_0 = np.rot90(image[axis0, :, :])
+    image_1 = np.rot90(image[:, axis1, :])
+    image_2 = np.rot90(image[:, :, axis2])
     
-    mask_0 = np.rot90(mask[27, :, :])
-    mask_1 = np.rot90(mask[:, 26, :])
-    mask_2 = np.rot90(mask[:, :, 4])
+    mask_0 = np.rot90(mask[axis0, :, :])
+    mask_1 = np.rot90(mask[:, axis1, :])
+    mask_2 = np.rot90(mask[:, :, axis2])
     
-    pred_0 = np.rot90(pred[27, :, :])
-    pred_1 = np.rot90(pred[:, 26, :])
-    pred_2 = np.rot90(pred[:, :, 4])
+    pred_0 = np.rot90(pred[axis0, :, :])
+    pred_1 = np.rot90(pred[:, axis1, :])
+    pred_2 = np.rot90(pred[:, :, axis2])
 
     combined_0 = mask_0 * 2 + pred_0
     combined_1 = mask_1 * 2 + pred_1
