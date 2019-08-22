@@ -1,10 +1,10 @@
 from keras.optimizers import Adam
 
-from networks.arch.unet import unet
-from networks.arch.unet import unet_bn
-from networks.arch.unet3d import unet3d
-from networks.arch.resunet import resunet
-from networks.arch.resunet3d import resunet3d
+from networks.archs.unet import unet
+from networks.archs.unet import unet_bn
+from networks.archs.unet3d import unet3d
+from networks.archs.resunet import resunet
+from networks.archs.resunet3d import resunet3d
 
 def get(
     name,
