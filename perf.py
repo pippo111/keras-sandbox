@@ -35,7 +35,8 @@ for setup in cfg.setups:
     # Grab dataset
     my_dataset = dataset.MyDataset(
         collection_name = cfg.dataset['collection_name'],
-        batch_size=setup['batch_size']
+        batch_size=setup['batch_size'],
+        limit = cfg.dataset['limit']
     )
 
     # Create model
@@ -51,7 +52,7 @@ for setup in cfg.setups:
         height = cfg.dataset['height'],
         depth = cfg.dataset['depth'],
         slice_depth = cfg.dataset['slice_depth'],
-        epochs = cfg.model['epochs']
+        epochs = cfg.model['epochs']        
     )
 
     # Create generators

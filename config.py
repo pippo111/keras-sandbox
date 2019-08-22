@@ -5,7 +5,7 @@
 
 # Dataset common setup
 dataset = {
-    'collection_name': 'mindboggle_84_256x256x192_brain_slice_8',
+    'collection_name': 'mindboggle_84_256x256x192_brain_slice_8_float32',
     'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
     'input_image_niftii': 't1weighted_2std.nii.gz',
     'width': 192,
@@ -13,7 +13,7 @@ dataset = {
     'depth': 256,
     'slice_depth': 8,
     'labels': [4.0, 43.0],
-    'limit': None
+    'limit': 670
 }
 
 # Models common setup
