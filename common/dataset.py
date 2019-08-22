@@ -76,12 +76,36 @@ class MyDataset():
     else:
       self.save_3d(prepared_data, scan_name, 'labels')
 
+  def create_3d(self, scan_name, path):
+    print(f'Loading from {path}/{self.input_label_niftii}')
+    label_data = utils.load_image_data(self.input_label_niftii, path)
+    prepared_labels = utils.convert_to_binary_3d(label_data, self.labels)
+    prepared_labels = utils.resize_3d(prepared_labels, self.width, self.height, self.depth)
+
+    print(f'Loading from {path}/{self.input_image_niftii}...')
+    image_data = utils.load_image_data(self.input_image_niftii, path)
+    prepared_images = utils.resize_3d(image_data, self.width, self.height, self.depth)
+
+    if self.slice_depth:
+      for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
+        sliced_labels = prepared_labels[:,:,i : i + self.slice_depth]
+        sliced_images = prepared_images[:,:,i : i + self.slice_depth]
+
+        if sliced_labels.max() > 0.0:
+          self.save_3d(sliced_labels, f'{scan_name}_{slice_no}', 'labels')
+          self.save_3d(sliced_images, f'{scan_name}_{slice_no}', 'images')
+
+    else:
+      self.save_3d(prepared_labels, scan_name, 'labels')
+      self.save_3d(prepared_images, scan_name, 'images')
+
+
   # Public api
   def create_dataset_3d(self):
     for scan_name in self.scans:
       full_path = os.path.join(self.in_dataset_dir, scan_name)
-      self.create_image_3d(scan_name, full_path)
-      self.create_label_3d(scan_name, full_path)
+
+      self.create_3d(scan_name, full_path)
 
   def create_train_test_gen(self):
     X_files = glob.glob(os.path.join(self.out_dataset_dir, self.collection_name, 'images', '*.npy'))[:self.limit]
