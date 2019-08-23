@@ -8,6 +8,7 @@ from common.logs import to_table
 import config as cfg
 
 from train import train
+from evaluate import evaluate
 
 params = {
     'arch': pd.Series(),
@@ -34,6 +35,19 @@ params = {
 for setup in cfg.setups:
     # Train model
     checkpoint, epoch_total, epoch_time = train({ **cfg.dataset, **cfg.model, **setup })
+
+    print(checkpoint, epoch_total, epoch_time)
+
+    # Evaluate model
+    evaluation = evaluate(
+        checkpoint,
+        cfg.dataset['collection_name'],
+        setup['batch_size'],
+        cfg.dataset['limit'],
+        cfg.model['threshold']
+    )
+
+    print(evaluation)
 
     # # Validate model
     # my_model.load()
