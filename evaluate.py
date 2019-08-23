@@ -16,14 +16,14 @@ def evaluate(checkpoint, collection_name, batch_size=32, limit=None, threshold=0
     my_model.print_summary()
 
     # Create generators
-    _, test_generator = my_dataset.create_train_test_gen()
+    _, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
 
     # Validate model
-    val_loss, val_acc = my_model.evaluate(test_generator)
+    val_loss, val_acc = my_model.evaluate(valid_generator)
     ds_size = my_dataset.get_count()
     
-    _, y_preds = my_model.predict(test_generator)
-    _, y_test = get_all_gen_items(test_generator)
+    X_preds, y_preds = my_model.predict(valid_generator)
+    X_test, y_test = get_all_gen_items(valid_generator)
 
     # Calculate false and true positive and negative
     fp_rate, fn_rate, fp_total, fn_total = calc_confusion_matrix(y_test, y_preds)

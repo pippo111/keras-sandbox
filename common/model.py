@@ -16,6 +16,7 @@ class MyModel():
         self.epochs = epochs
         self.threshold = threshold
 
+    # from_arch
     def create(
             self,
             arch,
@@ -39,10 +40,9 @@ class MyModel():
                 n_filters=filters
             )
         
-
+    # from_checkpoint
     def load(self):
         self.model = load_model(f'output/models/{self.checkpoint}.hdf5')
-        print(self.model.get_config())
 
     def train(self, train_generator, test_generator):
         time_callback = TimeHistory()

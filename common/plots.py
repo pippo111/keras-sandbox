@@ -2,8 +2,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-def save_sample_plot(image, mask, pred, filename, patch):
-    axis0, axis1, axis2 = patch
+def plot_confusions(image, mask, pred, coords, show=True, save=False, filename='confusion_plot.png'):
+    axis0, axis1, axis2 = coords
 
     image_0 = np.rot90(image[axis0, :, :])
     image_1 = np.rot90(image[:, axis1, :])
@@ -54,5 +54,10 @@ def save_sample_plot(image, mask, pred, filename, patch):
     ax[4][2].imshow(image_2, cmap='gray')
     ax[4][2].imshow(combined_2, cmap=cmap, norm=norm, alpha=0.2)
     
-    fig.savefig(filename)
+    if show:
+        plt.show()
+
+    if save:
+        fig.savefig(filename)
+
     plt.close()

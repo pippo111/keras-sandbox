@@ -36,10 +36,16 @@ def train(setup):
 
 
     # Create generators
-    train_generator, test_generator = my_dataset.create_train_test_gen()
+    train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
 
     # Perform train
-    history, epoch_time = my_model.train(train_generator, test_generator)
+    history, epoch_time = my_model.train(train_generator, valid_generator)
     epoch_total = len(history.history['val_loss'])
 
-    return checkpoint, epoch_total, epoch_time
+    results = {
+        'checkpoint': checkpoint,
+        'epoch_total': epoch_total,
+        'epoch_time': epoch_time
+    }
+
+    return results

@@ -9,6 +9,7 @@ import config as cfg
 
 from train import train
 from evaluate import evaluate
+from plot import plot
 
 params = {
     'arch': pd.Series(),
@@ -34,9 +35,11 @@ params = {
 
 for setup in cfg.setups:
     # Train model
-    checkpoint, epoch_total, epoch_time = train({ **cfg.dataset, **cfg.model, **setup })
+    results = train({ **cfg.dataset, **cfg.model, **setup })
+    
+    checkpoint = results['checkpoint']
 
-    print(checkpoint, epoch_total, epoch_time)
+    print(results)
 
     # Evaluate model
     evaluation = evaluate(
@@ -49,28 +52,14 @@ for setup in cfg.setups:
 
     print(evaluation)
 
-    # # Validate model
-    # my_model.load()
-    # val_loss, val_acc = my_model.evaluate(test_generator)
-    # ds_size = my_dataset.get_count()
-    
-    # X_preds, y_preds = my_model.predict(test_generator)
-    # X_test, y_test = get_all_gen_items(test_generator)
-
-    # # calculate false and true positive and negative
-    # fp_rate, fn_rate, fp_total, fn_total = calc_confusion_matrix(y_test, y_preds)
-
-    # # save plot with sample image and result mask
-    # image = X_test[0].squeeze()
-    # mask = y_test[0].squeeze()
-    # pred = y_preds[0].squeeze()
-
-    # plots.save_sample_plot(
-    #     image,
-    #     mask,
-    #     pred,
-    #     filename=f'output/models/{checkpoint}.png',
-    #     patch=(cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']))
+    plot(
+        checkpoint,
+        cfg.dataset['collection_name'],
+        coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
+        batch_size = setup['batch_size'],
+        limit = cfg.dataset['limit'],
+        threshold = cfg.model['threshold']
+    )
 
     # params['arch'][checkpoint] = setup['arch']
     # params['loss_fn'][checkpoint] = setup['loss_fn']
