@@ -51,32 +51,6 @@ class MyDataset():
         np.save(data_full_name, norm_data)
         print('Done.')
 
-    def create_image_3d(self, scan_name, path):
-        print(f'Loading from {path}/{self.input_image_niftii}...')
-        image_data = utils.load_image_data(self.input_image_niftii, path)
-        prepared_data = utils.resize_3d(image_data, self.width, self.height, self.depth)
-
-        if self.slice_depth:
-            for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
-                sliced_data = prepared_data[:,:,i : i + self.slice_depth]
-                self.save_3d(sliced_data, f'{scan_name}_{slice_no}', 'images')
-        else:
-            self.save_3d(prepared_data, scan_name, 'images')
-
-
-    def create_label_3d(self, scan_name, path):
-        print(f'Loading from {path}/{self.input_label_niftii}')
-        label_data = utils.load_image_data(self.input_label_niftii, path)
-        prepared_data = utils.convert_to_binary_3d(label_data, self.labels)
-        prepared_data = utils.resize_3d(prepared_data, self.width, self.height, self.depth)
-        
-        if self.slice_depth:
-            for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
-                sliced_data = prepared_data[:,:,i : i + self.slice_depth]
-                self.save_3d(sliced_data, f'{scan_name}_{slice_no}', 'labels')
-        else:
-            self.save_3d(prepared_data, scan_name, 'labels')
-
     def create_3d(self, scan_name, path):
         print(f'Loading from {path}/{self.input_label_niftii}')
         label_data = utils.load_image_data(self.input_label_niftii, path)
