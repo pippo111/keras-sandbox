@@ -70,7 +70,7 @@ def unet3d(width, height, depth, n_filters, loss_function, optimizer_function, b
   outputs = Conv3D(filters=1, kernel_size=(1, 1, 1), activation='sigmoid')(conv9)
   outputs = crop_to_fit(inputs, outputs)
 
-  model = Model(inputs=[inputs], outputs=[outputs])
+  model = Model(inputs=[inputs], outputs=[outputs], name='Unet3d')
   model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])
 
   return model
