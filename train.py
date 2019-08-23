@@ -1,11 +1,5 @@
-import pandas as pd
-
-from common import model
-from common import dataset
-from common import plots
-from common.utils import get_all_gen_items, calc_confusion_matrix
-from common.logs import to_table
-import config as cfg
+from common.model import MyModel
+from common.dataset import MyDataset
 
 def train(setup):
     checkpoint = "{}_{}_{}_bs-{}_bn-{}_f-{}".format(
@@ -18,14 +12,14 @@ def train(setup):
     )
 
     # Grab dataset
-    my_dataset = dataset.MyDataset(
+    my_dataset = MyDataset(
         collection_name = setup['collection_name'],
         batch_size=setup['batch_size'],
         limit = setup['limit']
     )
 
     # Create model
-    my_model = model.MyModel(
+    my_model = MyModel(
         arch = setup['arch'],
         loss_function = setup['loss_fn'],
         optimizer_function = setup['optimizer_fn'],
