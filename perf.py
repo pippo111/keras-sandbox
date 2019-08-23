@@ -52,7 +52,7 @@ for setup in cfg.setups:
         height = cfg.dataset['height'],
         depth = cfg.dataset['depth'],
         slice_depth = cfg.dataset['slice_depth'],
-        epochs = cfg.model['epochs']        
+        epochs = cfg.model['epochs']
     )
 
     # Create generators
