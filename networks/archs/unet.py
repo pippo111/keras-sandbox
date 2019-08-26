@@ -4,7 +4,7 @@ from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
 from keras.layers.merge import concatenate
 
-def unet(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm=False):
+def unet(input_shape, n_filters, loss_function, optimizer_function, batch_norm=False):
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3), activation='relu', padding='same'):
     x = Conv2D(
@@ -29,7 +29,7 @@ def unet(width, height, depth, n_filters, loss_function, optimizer_function, bat
 
     return x
 
-  inputs = Input((height, width, 1))
+  inputs = Input((*input_shape, 1))
 
   # Contracting path
   conv1 = conv_block(inputs, n_filters)
@@ -71,5 +71,5 @@ def unet(width, height, depth, n_filters, loss_function, optimizer_function, bat
 
   return model
 
-def unet_bn(width, height, depth, n_filters, loss_function, optimizer_function):
-  return unet(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm=True)
+def unet_bn(input_shape, n_filters, loss_function, optimizer_function):
+  return unet(input_shape, n_filters, loss_function, optimizer_function, batch_norm=True)

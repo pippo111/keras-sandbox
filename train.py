@@ -27,10 +27,7 @@ def train(setup):
         optimizer_function = setup['optimizer_fn'],
         batch_norm = setup['batch_norm'],
         filters = setup['filters'],
-        width = setup['width'],
-        height = setup['height'],
-        depth = setup['depth'],
-        slice_depth = setup['slice_depth']
+        input_shape = setup['input_shape']
     )
     my_model.print_summary()
 

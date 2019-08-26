@@ -24,19 +24,14 @@ class MyModel():
             optimizer_function,
             batch_norm=False,
             filters=16,
-            width=176,
-            height=256,
-            depth=256,
-            slice_depth=None
+            input_shape=(48,64,64)
         ):
         self.model = network.get(
                 name=arch,
                 loss_function=loss.get(loss_function),
                 optimizer_function=optimizer.get(optimizer_function),
                 batch_norm=batch_norm,
-                width=width,
-                height=height,
-                depth=slice_depth or depth,
+                input_shape=input_shape,
                 n_filters=filters
             )
         

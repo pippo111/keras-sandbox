@@ -27,10 +27,7 @@ params = {
     'total_epochs': pd.Series(),
     'time_per_epoch': pd.Series(),
     'dataset_size': pd.Series(),
-    'width': pd.Series(),
-    'height': pd.Series(),
-    'depth': pd.Series(),
-    'slice_depth': pd.Series()
+    'input_shape': pd.Series()
 }
 
 for setup in cfg.setups:
@@ -38,8 +35,6 @@ for setup in cfg.setups:
     results = train({ **cfg.dataset, **cfg.model, **setup })
     
     checkpoint = results['checkpoint']
-
-    print(results)
 
     # Evaluate model
     evaluation = evaluate(
@@ -61,30 +56,27 @@ for setup in cfg.setups:
         threshold = cfg.model['threshold']
     )
 
-    # params['arch'][checkpoint] = setup['arch']
-    # params['loss_fn'][checkpoint] = setup['loss_fn']
-    # params['optimizer_fn'][checkpoint] = setup['optimizer_fn']
-    # params['batch_size'][checkpoint] = setup['batch_size']
-    # params['filters'][checkpoint] = setup['filters']
-    # params['batch_norm'][checkpoint] = setup['batch_norm']
-    # params['val_loss'][checkpoint] = val_loss
-    # params['val_acc'][checkpoint] = val_acc
-    # params['fp_rate'][checkpoint] = fp_rate
-    # params['fn_rate'][checkpoint] = fn_rate
-    # params['fp_total'][checkpoint] = fp_total
-    # params['fn_total'][checkpoint] = fn_total
-    # params['total_epochs'][checkpoint] = epoch_total
-    # params['time_per_epoch'][checkpoint] = epoch_time
-    # params['dataset_size'][checkpoint] = ds_size
-    # params['width'][checkpoint] = cfg.dataset['width']
-    # params['height'][checkpoint] = cfg.dataset['height']
-    # params['depth'][checkpoint] = cfg.dataset['depth']
-    # params['slice_depth'][checkpoint] = cfg.dataset['slice_depth']
+    params['arch'][checkpoint] = setup['arch']
+    params['loss_fn'][checkpoint] = setup['loss_fn']
+    params['optimizer_fn'][checkpoint] = setup['optimizer_fn']
+    params['batch_size'][checkpoint] = setup['batch_size']
+    params['filters'][checkpoint] = setup['filters']
+    params['batch_norm'][checkpoint] = setup['batch_norm']
+    params['val_loss'][checkpoint] = evaluation['val_loss']
+    params['val_acc'][checkpoint] = evaluation['val_acc']
+    params['fp_rate'][checkpoint] = evaluation['fp_rate']
+    params['fn_rate'][checkpoint] = evaluation['fn_rate']
+    params['fp_total'][checkpoint] = evaluation['fp_total']
+    params['fn_total'][checkpoint] = evaluation['fn_total']
+    params['total_epochs'][checkpoint] = results['epoch_total']
+    params['time_per_epoch'][checkpoint] = results['epoch_time']
+    params['dataset_size'][checkpoint] = evaluation['ds_size']
+    params['input_shape'][checkpoint] = cfg.dataset['input_shape']
 
-    # output = pd.DataFrame(params)
+    output = pd.DataFrame(params)
 
-    # # Save as csv
-    # output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
+    # Save as csv
+    output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
 
-    # # Save as html interactive table
-    # to_table(output.to_html(), f'output/models/{cfg.dataset["collection_name"]}_summary.html')
+    # Save as html interactive table
+    to_table(output.to_html(), f'output/models/{cfg.dataset["collection_name"]}_summary.html')

@@ -16,22 +16,22 @@ dataset = {
 
 # Models common setup
 model = {
-    'epochs': 1,
+    'epochs': 100,
     'seed': 1,
     'threshold': 0.5
 }
 
 logs = {
-    'axis_0': 27,
-    'axis_1': 26,
-    'axis_2': 42
+    'axis_0': 10,
+    'axis_1': 10,
+    'axis_2': 28
 }
 
 # Model different parameters
 setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 2, 'batch_norm': True,
+        'batch_size': 16, 'filters': 2, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     # {

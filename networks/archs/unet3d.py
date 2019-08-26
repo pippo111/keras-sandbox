@@ -6,7 +6,7 @@ from keras.layers.merge import concatenate
 
 from common.utils import pad_to_fit, crop_to_fit
 
-def unet3d(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm=True):
+def unet3d(input_shape, n_filters, loss_function, optimizer_function, batch_norm=True):
   # Convolutional block: Conv3x3 -> ReLU
   def conv_block(inputs, n_filters, kernel_size=(3, 3, 3), activation='relu', padding='same'):
     x = Conv3D(
@@ -31,7 +31,7 @@ def unet3d(width, height, depth, n_filters, loss_function, optimizer_function, b
 
     return x
 
-  inputs = Input((width, height, depth, 1))
+  inputs = Input((*input_shape, 1))
   padded = pad_to_fit(inputs)
 
   # Contracting path

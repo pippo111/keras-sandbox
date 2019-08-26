@@ -8,9 +8,7 @@ from networks.archs.resunet3d import resunet3d
 
 def get(
     name,
-    width=176,
-    height=256,
-    depth=1,
+    input_shape=(48,64,64),
     n_filters=16,
     loss_function='binary_crossentropy',
     optimizer_function=Adam(),
@@ -24,4 +22,4 @@ def get(
         ResUnet3d=resunet3d
     )
     
-    return networks[name](width, height, depth, n_filters, loss_function, optimizer_function, batch_norm)
+    return networks[name](input_shape, n_filters, loss_function, optimizer_function, batch_norm)

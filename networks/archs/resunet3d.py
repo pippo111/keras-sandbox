@@ -4,7 +4,7 @@ from keras.layers.convolutional import Conv3D, Conv3DTranspose
 from keras.layers.pooling import MaxPooling3D
 from keras.layers.merge import concatenate, Add
 
-def resunet3d(width, height, depth, n_filters, loss_function, optimizer_function, batch_norm):
+def resunet3d(input_shape, n_filters, loss_function, optimizer_function, batch_norm):
   # Convolutional block: BN -> ReLU -> Conv3x3
   def conv_block(
     inputs,
@@ -32,7 +32,7 @@ def resunet3d(width, height, depth, n_filters, loss_function, optimizer_function
 
     return x
 
-  inputs = Input((width, height, depth, 1))
+  inputs = Input((*input_shape, 1))
 
   # Encoding
   short1 = inputs
