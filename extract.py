@@ -7,10 +7,8 @@ my_dataset = dataset.MyDataset(
   input_label_niftii = cfg.dataset['input_label_niftii'],
   input_image_niftii = cfg.dataset['input_image_niftii'],
   labels = cfg.dataset['labels'],
-  width=cfg.dataset['width'],
-  height=cfg.dataset['height'],
-  depth=cfg.dataset['depth'],
-  slice_depth=cfg.dataset['slice_depth'],
+  scan_shape=cfg.dataset['scan_shape'],
+  input_shape=cfg.dataset['input_shape'],
   scans=cfg.scans
 )
 my_dataset.create_dataset_3d()

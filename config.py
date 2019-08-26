@@ -5,20 +5,18 @@
 
 # Dataset common setup
 dataset = {
-    'collection_name': 'mindboggle_84_64x64x48_lateral_ventricle',
+    'collection_name': 'mindboggle_84_Nx48x64x64_lateral_ventricle',
     'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
     'input_image_niftii': 't1weighted_2std.nii.gz',
-    'width': 48,
-    'height': 64,
-    'depth': 64,
-    'slice_depth': None,
+    'scan_shape': (192, 256, 256),
+    'input_shape': (48, 64, 64),
     'labels': [4.0, 43.0],
-    'limit': 48
+    'limit': None
 }
 
 # Models common setup
 model = {
-    'epochs': 50,
+    'epochs': 1,
     'seed': 1,
     'threshold': 0.5
 }
@@ -33,7 +31,7 @@ logs = {
 setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': False,
+        'batch_size': 8, 'filters': 2, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     # {

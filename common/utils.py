@@ -31,7 +31,8 @@ def convert_to_binary_3d(data, labels):
 
     return data.astype(np.float32)
 
-def resize_3d(data, width, height, depth):
+def resize_3d(data, new_shape):
+    width, height, depth = new_shape
     in_width, in_height, in_depth = data.shape
     width_ratio = width / in_width
     height_ratio = height /in_height
@@ -142,3 +143,14 @@ def get_all_gen_items(generator):
             y_items.append(item)
 
     return np.array(X_items), np.array(y_items)
+
+def slice_3d(inputs, new_shape):
+    W, H, D = inputs.shape
+    w, h, d = new_shape
+
+    outputs = inputs.reshape(W//w, w, H//h, h, D//d, d)
+    outputs = outputs.transpose(0,2,4,1,3,5)
+
+    outputs = outputs.reshape(-1, w, h, d)
+
+    return outputs

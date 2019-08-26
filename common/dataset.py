@@ -14,10 +14,8 @@ class MyDataset():
             collection_name = 'mindboggle',
             input_label_niftii = 'aseg-in-t1weighted_2std.nii.gz',
             input_image_niftii = 't1weighted_2std.nii.gz',
-            width=48,
-            height=64,
-            depth=64,
-            slice_depth=8,
+            scan_shape = (192, 256, 256),
+            input_shape = (48, 64, 64),
             batch_size = 32,
             limit = None
         ):
@@ -27,10 +25,10 @@ class MyDataset():
         self.input_label_niftii = input_label_niftii
         self.input_image_niftii = input_image_niftii
         self.batch_size = batch_size
-        self.width = width
-        self.height = height
-        self.depth = depth
-        self.slice_depth = slice_depth
+
+        self.scan_shape = scan_shape
+        self.input_shape = input_shape
+
         self.limit = limit
 
         self.in_dataset_dir = './input/niftii'
@@ -55,20 +53,20 @@ class MyDataset():
         print(f'Loading from {path}/{self.input_label_niftii}')
         label_data = utils.load_image_data(self.input_label_niftii, path)
         prepared_labels = utils.convert_to_binary_3d(label_data, self.labels)
-        prepared_labels = utils.resize_3d(prepared_labels, self.width, self.height, self.depth)
+        prepared_labels = utils.resize_3d(prepared_labels, self.scan_shape)
 
         print(f'Loading from {path}/{self.input_image_niftii}...')
         image_data = utils.load_image_data(self.input_image_niftii, path)
-        prepared_images = utils.resize_3d(image_data, self.width, self.height, self.depth)
+        prepared_images = utils.resize_3d(image_data, self.scan_shape)
 
-        if self.slice_depth:
-            for slice_no, i in enumerate(np.arange(0, self.depth, self.slice_depth)):
-                sliced_labels = prepared_labels[:,:,i : i + self.slice_depth]
-                sliced_images = prepared_images[:,:,i : i + self.slice_depth]
+        if self.scan_shape != self.input_shape:
+            sliced_images = utils.slice_3d(prepared_images, self.input_shape)
+            sliced_labels = utils.slice_3d(prepared_labels, self.input_shape)
 
-                if sliced_labels.max() > 0.0:
-                    self.save_3d(sliced_labels, f'{scan_name}_{slice_no}', 'labels')
-                    self.save_3d(sliced_images, f'{scan_name}_{slice_no}', 'images')
+            for i, labels in enumerate(sliced_labels):
+                if labels.max() > 0.0:
+                    self.save_3d(labels, f'{scan_name}_{i}', 'labels')
+                    self.save_3d(sliced_images[i], f'{scan_name}_{i}', 'images')
 
         else:
             self.save_3d(prepared_labels, scan_name, 'labels')
