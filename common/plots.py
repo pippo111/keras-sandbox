@@ -60,4 +60,4 @@ def plot_confusions(image, mask, pred, coords, show=True, save=False, filename='
     if save:
         fig.savefig(filename)
 
-    plt.close()
+    plt.close('close')
