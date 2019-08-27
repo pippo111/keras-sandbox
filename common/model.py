@@ -70,7 +70,7 @@ class MyModel():
             )
 
         if weights:
-            self.model.load_weights(self.checkpoint)
+            self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
 
 
     """Perform model training

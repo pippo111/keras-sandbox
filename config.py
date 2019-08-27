@@ -16,7 +16,7 @@ dataset = {
 
 # Models common setup
 model = {
-    'epochs': 1,
+    'epochs': 100,
     'seed': 1,
     'threshold': 0.5
 }
@@ -31,24 +31,55 @@ logs = {
 setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 16, 'filters': 2, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
+        'batch_size': 1, 'filters': 8, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
     },
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 16, 'filters': 2, 'batch_norm': True,
+        'batch_size': 4, 'filters': 8, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
-    # {
-    #     'arch': 'ResUnet3d', 'loss_fn': 'binary',
-    #     'batch_size': 8, 'filters': 2, 'batch_norm': True,
-    #     'optimizer_fn': 'Adam'
-    # },
-    # {
-    #     'arch': 'Unet3d', 'loss_fn': 'binary',
-    #     'batch_size': 4, 'filters': 8, 'batch_norm': True,
-    #     'optimizer_fn': 'Adam'
-    # }
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 8, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 16, 'filters': 8, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 32, 'filters': 8, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 1, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 8, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 16, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 32, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'Adam'
+    }
 ]
 
 scans = [
