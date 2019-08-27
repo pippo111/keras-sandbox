@@ -7,10 +7,10 @@ def weighted_cross_entropy(beta):
 
         return tf.log(y_pred / (1 - y_pred))
 
-    def loss(y_true, y_pred):
+    def weighted_cross(y_true, y_pred):
         y_pred = convert_to_logits(y_pred)
         loss = tf.nn.weighted_cross_entropy_with_logits(logits=y_pred, targets=y_true, pos_weight=beta)
 
         return tf.reduce_mean(loss)
 
-    return loss
+    return weighted_cross

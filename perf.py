@@ -1,82 +1,46 @@
-import pandas as pd
-
-from common import model
-from common import dataset
-from common import plots
-from common.utils import get_all_gen_items, calc_confusion_matrix
-from common.logs import to_table
 import config as cfg
 
-from train import train
-from evaluate import evaluate
-from plot import plot
-
-params = {
-    'arch': pd.Series(),
-    'loss_fn': pd.Series(),
-    'optimizer_fn': pd.Series(),
-    'batch_size': pd.Series(),
-    'filters': pd.Series(),
-    'batch_norm': pd.Series(),
-    'val_loss': pd.Series(),
-    'val_acc': pd.Series(),
-    'fp_rate': pd.Series(),
-    'fn_rate': pd.Series(),
-    'fp_total': pd.Series(),
-    'fn_total': pd.Series(),
-    'total_epochs': pd.Series(),
-    'time_per_epoch': pd.Series(),
-    'dataset_size': pd.Series(),
-    'input_shape': pd.Series()
-}
+from common.model import MyModel
+from common.dataset import MyDataset
 
 for setup in cfg.setups:
+    # Grab dataset
+    my_dataset = MyDataset(
+        collection_name = cfg.dataset['collection_name'],
+        batch_size = setup['batch_size'],
+        limit = cfg.dataset['limit']
+    )
+
+    # Create generators
+    train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
+
+    # Create model
+    my_model = MyModel(
+            train_generator = train_generator,
+            valid_generator = valid_generator,
+            test_generator = test_generator,
+            arch = setup['arch'],
+            loss_fn = setup['loss_fn'],
+            optimizer_fn = setup['optimizer_fn'],
+            batch_size = setup['batch_size'],
+            batch_norm = setup['batch_norm'],
+            filters = setup['filters'],
+            input_shape = cfg.dataset['input_shape']
+        )
+    my_model.create()
+    my_model.print_summary()
+
     # Train model
-    results = train({ **cfg.dataset, **cfg.model, **setup })
-    
-    checkpoint = results['checkpoint']
+    my_model.train(epochs = cfg.model['epochs'])
 
     # Evaluate model
-    evaluation = evaluate(
-        checkpoint,
-        cfg.dataset['collection_name'],
-        setup['batch_size'],
-        cfg.dataset['limit'],
-        cfg.model['threshold']
-    )
+    my_model.evaluate()
 
-    print(evaluation)
-
-    plot(
-        checkpoint,
-        cfg.dataset['collection_name'],
+    # Plot sample output result
+    my_model.plot_result(
         coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
-        batch_size = setup['batch_size'],
-        limit = cfg.dataset['limit'],
-        threshold = cfg.model['threshold']
+        show = False, save = True
     )
 
-    params['arch'][checkpoint] = setup['arch']
-    params['loss_fn'][checkpoint] = setup['loss_fn']
-    params['optimizer_fn'][checkpoint] = setup['optimizer_fn']
-    params['batch_size'][checkpoint] = setup['batch_size']
-    params['filters'][checkpoint] = setup['filters']
-    params['batch_norm'][checkpoint] = setup['batch_norm']
-    params['val_loss'][checkpoint] = evaluation['val_loss']
-    params['val_acc'][checkpoint] = evaluation['val_acc']
-    params['fp_rate'][checkpoint] = evaluation['fp_rate']
-    params['fn_rate'][checkpoint] = evaluation['fn_rate']
-    params['fp_total'][checkpoint] = evaluation['fp_total']
-    params['fn_total'][checkpoint] = evaluation['fn_total']
-    params['total_epochs'][checkpoint] = results['epoch_total']
-    params['time_per_epoch'][checkpoint] = results['epoch_time']
-    params['dataset_size'][checkpoint] = evaluation['ds_size']
-    params['input_shape'][checkpoint] = cfg.dataset['input_shape']
-
-    output = pd.DataFrame(params)
-
-    # Save as csv
-    output.to_csv(f'output/models/{cfg.dataset["collection_name"]}_summary.csv')
-
-    # Save as html interactive table
-    to_table(output.to_html(), f'output/models/{cfg.dataset["collection_name"]}_summary.html')
+    # Save results
+    my_model.save_results(f'output/models/{cfg.dataset["collection_name"]}_results')

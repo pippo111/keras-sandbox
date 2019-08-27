@@ -16,7 +16,7 @@ dataset = {
 
 # Models common setup
 model = {
-    'epochs': 100,
+    'epochs': 1,
     'seed': 1,
     'threshold': 0.5
 }
@@ -32,16 +32,16 @@ setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
         'batch_size': 16, 'filters': 2, 'batch_norm': True,
+        'optimizer_fn': 'RAdam'
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 16, 'filters': 2, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     # {
-    #     'arch': 'Unet3d', 'loss_fn': 'binary',
-    #     'batch_size': 1, 'filters': 8, 'batch_norm': True,
-    #     'optimizer_fn': 'Adam'
-    # },
-    # {
-    #     'arch': 'Unet3d', 'loss_fn': 'binary',
-    #     'batch_size': 2, 'filters': 8, 'batch_norm': True,
+    #     'arch': 'ResUnet3d', 'loss_fn': 'binary',
+    #     'batch_size': 8, 'filters': 2, 'batch_norm': True,
     #     'optimizer_fn': 'Adam'
     # },
     # {

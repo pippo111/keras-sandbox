@@ -1,76 +1,181 @@
-from time import time
 from keras.callbacks import TensorBoard, ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
-from keras.models import load_model
 import numpy as np
+import pandas as pd
+import os
 
+from common.utils import get_all_gen_items, calc_confusion_matrix
+from common.plots import plot_confusions
+from common.logs import to_table
 from common.time_callback import TimeHistory
 from common.reinit_falsestart_callback import ReinitWeightOnFalseStart
 from networks import network
 from networks import loss
 from networks import optimizer
-import config as cfg
 
 class MyModel():
-    def __init__(self, checkpoint, epochs=50, threshold=0.5):
-        self.checkpoint = checkpoint
-        self.epochs = epochs
-        self.threshold = threshold
-
-    # from_arch
-    def create(
+    def __init__(
             self,
-            arch,
-            loss_function,
-            optimizer_function,
-            batch_norm=False,
-            filters=16,
-            input_shape=(48,64,64)
+            train_generator, valid_generator, test_generator,
+            arch, loss_fn, optimizer_fn,
+            batch_size=16, batch_norm=False, filters=16,
+            threshold=0.5, input_shape=(48,64,64)
         ):
-        self.model = network.get(
-                name=arch,
-                loss_function=loss.get(loss_function),
-                optimizer_function=optimizer.get(optimizer_function),
-                batch_norm=batch_norm,
-                input_shape=input_shape,
-                n_filters=filters
+        self.train_generator = train_generator
+        self.valid_generator = valid_generator
+        self.test_generator = test_generator
+
+        self.checkpoint = "{}_{}_{}_bs-{}_bn-{}_f-{}".format(
+                arch,
+                optimizer_fn,
+                loss_fn,
+                batch_size,
+                batch_norm,
+                filters
             )
         
-    # from_checkpoint
-    def load(self):
-        self.model = load_model(f'output/models/{self.checkpoint}.hdf5')
+        self.setup = {
+            'arch': arch,
+            'loss_fn': loss_fn,
+            'optimizer_fn': optimizer_fn,
+            'batch_size': batch_size,
+            'filters': filters,
+            'batch_norm': batch_norm,
+            'train_sets': train_generator.__len__() * batch_size,
+            'input_shape': input_shape,
+            'threshold': threshold
+        }
 
-    def train(self, train_generator, test_generator):
+        self.results = {
+            'val_loss': '',
+            'val_acc': '',
+            'fp_rate': '',
+            'fn_rate': '',
+            'fp_total': '',
+            'fn_total': '',
+            'total_epochs': '',
+            'time_per_epoch': ''
+        }
+
+    """Creates and compile model with given hyperparameters
+    It is possible to load model weights from previous training
+    """
+    def create(self, weights=False):
+        self.model = network.get(
+                name = self.setup['arch'],
+                loss_function = loss.get(self.setup['loss_fn']),
+                optimizer_function = optimizer.get(self.setup['optimizer_fn']),
+                batch_norm = self.setup['batch_norm'],
+                input_shape = self.setup['input_shape'],
+                n_filters = self.setup['filters']
+            )
+
+        if weights:
+            self.model.load_weights(self.checkpoint)
+
+
+    """Perform model training
+    Returns basic info about trainig time
+    """
+    def train(self, epochs=50):
         time_callback = TimeHistory()
 
         history = self.model.fit_generator(
-            train_generator,
-            epochs=self.epochs,
-            callbacks=[
+            self.train_generator,
+            epochs = epochs,
+            callbacks = [
                 time_callback,
                 ReinitWeightOnFalseStart(patience=3, trials=1, checks=10, verbose=1),
                 # TensorBoard(log_dir=f'output/logs/{time()}-{self.checkpoint}'),
                 # EarlyStopping(patience=10, verbose=1),
-                # ReduceLROnPlateau(factor=0.1, patience=6, min_lr=0.00001, verbose=1),
+                ReduceLROnPlateau(factor=0.1, patience=6, min_lr=0.00001, verbose=1),
                 ModelCheckpoint(f'output/models/{self.checkpoint}.hdf5', verbose=1, save_best_only=True)
             ],
-            validation_data=test_generator
+            validation_data = self.test_generator
         )
 
         times = time_callback.times
         epoch_time = int(np.mean(times))
+        epoch_total = len(history.history['val_loss'])
+
+        self.results['total_epochs'] = epoch_total
+        self.results['time_per_epoch'] = epoch_time
 
         return history, epoch_time
-        
-    def evaluate(self, test_generator):
-        history = self.model.evaluate_generator(test_generator, verbose=1)
-        
-        return history
+    
+    """Evaluates model performance
+    by calculating confusion matrix
 
-    def predict(self, test_generator):
-        X_preds = self.model.predict_generator(test_generator, verbose=1)
-        y_preds = (X_preds > self.threshold).astype(np.uint8)
+    Returns calculated values
+    """
+    def evaluate(self):
+        # Validate model
+        val_loss, val_acc = self.model.evaluate_generator(self.test_generator, verbose=1)
+        
+        dummy_X_preds, y_preds = self.predict(self.setup['threshold'])
+        dummy_X_test, y_test = get_all_gen_items(self.valid_generator)
+
+        # Calculate false and true positive and negative
+        fp_rate, fn_rate, fp_total, fn_total = calc_confusion_matrix(y_test, y_preds)
+
+        self.results['val_loss'] = val_loss
+        self.results['val_acc'] = val_acc
+        self.results['fp_rate'] = fp_rate
+        self.results['fn_rate'] = fn_rate
+        self.results['fp_total'] = fp_total
+        self.results['fn_total'] = fn_total
+        
+        return fp_rate, fn_rate, fp_total, fn_total
+
+    """Returns predicted region and segmented representation
+    """
+    def predict(self, threshold):
+        X_preds = self.model.predict_generator(self.test_generator, verbose=1)
+        y_preds = (X_preds > threshold).astype(np.uint8)
         
         return X_preds, y_preds
 
+    """Display a plot with sample image and prediction
+    It is possible to only save image as png
+    """
+    def plot_result(self, coords, show=True, save=False):
+        dummy_X_preds, y_preds = self.predict(self.setup['threshold'])
+        X_test, y_test = self.test_generator.__getitem__(0)
+
+        image = X_test[0].squeeze()
+        mask = y_test[0].squeeze()
+        pred = y_preds[0].squeeze()
+
+        plot_confusions(
+            image,
+            mask,
+            pred,
+            filename = f'output/models/{self.checkpoint}.png',
+            coords = coords,
+            show = show,
+            save = save
+        )
+
+    """Returns dictionary with setup
+    """
+    def save_results(self, filename):
+        csv_file = f'{filename}.csv'
+        html_file = f'{filename}.html'
+
+        results = [{ 'checkpoint': self.checkpoint, **self.setup, **self.results }]
+        output = pd.DataFrame(results)
+
+        if not os.path.exists(csv_file):
+            output.to_csv(csv_file, index=False, header=True, mode='a')
+        else:
+            output.to_csv(csv_file, index=False, header=False, mode='a')
+
+        generated_csv = pd.read_csv(csv_file)
+
+        #open csv
+        to_table(generated_csv.to_html(index=False), html_file)
+            
+
+    """Prints out model architecture to standard output
+    """
     def print_summary(self):
         self.model.summary()
