@@ -25,20 +25,16 @@
                 'number',
                 'number',
                 'number',
-                'number',
-                'number',
                 'number'
             ],
             col_widths: [
-                '350px',
-                '110px',
-                '110px',
-                '110px',
+                '200px',
+                '120px',
+                '120px',
+                '120px',
                 '100px',
                 '100px',
                 '110px',
-                'null',
-                'null',
                 'null',
                 'null',
                 'null',
@@ -51,9 +47,17 @@
                 'null',
                 'null'
             ],
-            extensions:[{
-                name: 'sort'
-            }]
+            extensions:[
+                {
+                    name: 'colsVisibility',
+                    at_start: [7, 8, 9],
+                    text: 'Hide columns: ',
+                    enable_tick_all: true
+                },
+                {
+                    name: 'sort'
+                }
+            ]
         });
         tf.init();
     </script>
