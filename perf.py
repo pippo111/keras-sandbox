@@ -27,7 +27,7 @@ for setup in cfg.setups:
             filters = setup['filters'],
             input_shape = cfg.dataset['input_shape']
         )
-    my_model.create()
+    my_model.create(weights=False)
     my_model.print_summary()
 
     # Train model
