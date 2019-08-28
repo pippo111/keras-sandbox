@@ -52,6 +52,7 @@ class MyModel():
             'fn_rate': '',
             'fp_total': '',
             'fn_total': '',
+            'f_total': '',
             'total_epochs': '',
             'time_per_epoch': ''
         }
@@ -109,13 +110,13 @@ class MyModel():
     """
     def evaluate(self):
         # Validate model
-        val_loss, val_acc = self.model.evaluate_generator(self.test_generator, verbose=1)
+        val_loss, val_acc = self.model.evaluate_generator(self.valid_generator, verbose=1)
         
-        dummy_X_preds, y_preds = self.predict(self.setup['threshold'])
+        dummy_X_preds, y_preds = self.predict(self.valid_generator, self.setup['threshold'])
         dummy_X_test, y_test = get_all_gen_items(self.valid_generator)
 
         # Calculate false and true positive and negative
-        fp_rate, fn_rate, fp_total, fn_total = calc_confusion_matrix(y_test, y_preds)
+        fp_rate, fn_rate, fp_total, fn_total, f_total = calc_confusion_matrix(y_test, y_preds)
 
         self.results['val_loss'] = val_loss
         self.results['val_acc'] = val_acc
@@ -123,13 +124,14 @@ class MyModel():
         self.results['fn_rate'] = fn_rate
         self.results['fp_total'] = fp_total
         self.results['fn_total'] = fn_total
+        self.results['f_total'] = f_total
         
-        return fp_rate, fn_rate, fp_total, fn_total
+        return fp_rate, fn_rate, fp_total, fn_total, f_total
 
     """Returns predicted region and segmented representation
     """
-    def predict(self, threshold):
-        X_preds = self.model.predict_generator(self.test_generator, verbose=1)
+    def predict(self, generator, threshold):
+        X_preds = self.model.predict_generator(generator, verbose=1)
         y_preds = (X_preds > threshold).astype(np.uint8)
         
         return X_preds, y_preds
@@ -138,8 +140,8 @@ class MyModel():
     It is possible to only save image as png
     """
     def plot_result(self, coords, show=True, save=False):
-        dummy_X_preds, y_preds = self.predict(self.setup['threshold'])
-        X_test, y_test = self.test_generator.__getitem__(0)
+        dummy_X_preds, y_preds = self.predict(self.test_generator, self.setup['threshold'])
+        X_test, y_test = get_all_gen_items(self.test_generator)[30]
 
         image = X_test[0].squeeze()
         mask = y_test[0].squeeze()
