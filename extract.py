@@ -9,6 +9,7 @@ my_dataset = MyDataset(
   labels = cfg.dataset['labels'],
   scan_shape=cfg.dataset['scan_shape'],
   input_shape=cfg.dataset['input_shape'],
-  scans=cfg.scans
+  scans=cfg.scans,
+  only_masks=True
 )
 my_dataset.create_dataset_3d()

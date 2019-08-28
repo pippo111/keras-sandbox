@@ -134,28 +134,45 @@ class MyDataset():
 
         self.split_dataset()
 
-    def create_train_valid_test_gen(self, test_size=1):
-        X_files = sorted(
-            glob.glob(
-                os.path.join(self.out_dataset_dir, 'images', '*.npy')
-            )[:self.limit]
-        )
-        y_files = sorted(
-            glob.glob(
-                os.path.join(self.out_dataset_dir, 'labels', '*.npy')
-            )[:self.limit]
-        )
+    def get_train_valid_test_files(self):
+        X = {
+            'train': list(),
+            'valid': list(),
+            'test': list()
+        }
 
-        X_train, X_valid, y_train, y_valid = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
+        y = {
+            'train': list(),
+            'valid': list(),
+            'test': list()
+        }
+
+        for dataset in ('train', 'valid', 'test'):
+            X[dataset] = sorted(
+                glob.glob(
+                    os.path.join(self.out_dataset_dir, dataset, 'images', '*.npy')
+                )[:self.limit]
+            )
+            y[dataset] = sorted(
+                glob.glob(
+                    os.path.join(self.out_dataset_dir, dataset, 'labels', '*.npy')
+                )[:self.limit]
+            )
+
+        return X['train'], X['valid'], X['test'], y['train'], y['valid'], y['test']
+
+    def create_train_valid_test_gen(self):
+        X_train, X_valid, X_test, y_train, y_valid, y_test = self.get_train_valid_test_files()
 
         train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=True)
         valid_generator = data_sequence.DataSequence3d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
+        test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
 
         self.train_generator = train_generator
         self.valid_generator = valid_generator
-        self.test_generator = valid_generator
+        self.test_generator = test_generator
 
-        return train_generator, valid_generator, valid_generator
+        return train_generator, valid_generator, test_generator
 
     def get_count(self):
         X_files = glob.glob(os.path.join(self.out_dataset_dir, 'images', '*.npy'))[:self.limit]
