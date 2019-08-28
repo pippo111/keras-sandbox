@@ -38,8 +38,8 @@ class MyDataset():
         self.out_dataset_dir = os.path.join('./input/datasets', collection_name)
 
     def save_dataset_3d(self, X, y, scan_name):
-        self.save_3d(X, scan_name, 'labels')
-        self.save_3d(y, scan_name, 'images')
+        self.save_3d(X, scan_name, 'images')
+        self.save_3d(y, scan_name, 'labels')
 
     def save_3d(self, data, name, types):
         data_full_path = os.path.join(self.out_dataset_dir, types)
@@ -74,7 +74,7 @@ class MyDataset():
         X_files = glob.glob(os.path.join(self.out_dataset_dir, 'images', '*.npy'))
         y_files = glob.glob(os.path.join(self.out_dataset_dir, 'labels', '*.npy'))
 
-        X_train, X_valid, y_train, y_valid = train_test_split(X_files, y_files, test_size=0.25, random_state=1)
+        X_train, X_valid, y_train, y_valid = train_test_split(X_files, y_files, test_size=0.2, random_state=1)
         X_valid, X_test, y_valid, y_test =train_test_split(X_valid, y_valid, test_size=0.25, random_state=1)
 
         X_train_dir = os.path.join(self.out_dataset_dir, 'train', 'images')
