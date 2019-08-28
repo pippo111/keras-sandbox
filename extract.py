@@ -1,8 +1,8 @@
 import config as cfg
 
-from common import dataset
+from common.dataset import MyDataset
 
-my_dataset = dataset.MyDataset(
+my_dataset = MyDataset(
   collection_name = cfg.dataset['collection_name'],
   input_label_niftii = cfg.dataset['input_label_niftii'],
   input_image_niftii = cfg.dataset['input_image_niftii'],
