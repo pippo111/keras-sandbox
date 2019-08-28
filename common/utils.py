@@ -124,10 +124,12 @@ def calc_confusion_matrix(mask, pred):
     fpr_perc = fp_total / (fp_total + tn_total) if tn_total != 0 or fp_total != 0 else 0
     fnr_perc = fn_total / (fn_total + tp_total) if tp_total != 0 or fn_total != 0 else 0
 
+    f_total = fp_total + fn_total
+
     fpr_perc = '{:.0%}'.format(fpr_perc)
     fnr_perc = '{:.0%}'.format(fnr_perc)
 
-    return fpr_perc, fnr_perc, fp_total, fn_total
+    return fpr_perc, fnr_perc, fp_total, fn_total, f_total
 
 def get_all_gen_items(generator):
     X_items = list()
