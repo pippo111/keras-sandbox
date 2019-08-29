@@ -2,6 +2,7 @@ import config as cfg
 
 from common.model import MyModel
 from common.dataset import MyDataset
+from common.utils import calc_weights_generator
 
 for setup in cfg.setups:
     # Grab dataset
@@ -13,6 +14,8 @@ for setup in cfg.setups:
 
     # Create generators
     train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
+    loss_weights = calc_weights_generator(train_generator)
+    print(loss_weights)
 
     # Create model
     my_model = MyModel(
@@ -27,7 +30,10 @@ for setup in cfg.setups:
             filters = setup['filters'],
             input_shape = cfg.dataset['input_shape']
         )
-    my_model.create(weights=False)
+
+    
+
+    my_model.create(from_weights=False, loss_weights=loss_weights)
     my_model.print_summary()
 
     # Train model
@@ -37,10 +43,10 @@ for setup in cfg.setups:
     my_model.evaluate()
 
     # Plot sample output result
-    my_model.plot_result(
-        coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
-        show = False, save = True
-    )
+    # my_model.plot_result(
+    #     coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
+    #     show = False, save = True
+    # )
 
     # Save results
     my_model.save_results(f'output/models/{cfg.dataset["collection_name"]}_results')

@@ -60,17 +60,17 @@ class MyModel():
     """Creates and compile model with given hyperparameters
     It is possible to load model weights from previous training
     """
-    def create(self, weights=False):
+    def create(self, from_weights=False, loss_weights=None):
         self.model = network.get(
                 name = self.setup['arch'],
-                loss_function = loss.get(self.setup['loss_fn']),
+                loss_function = loss.get(self.setup['loss_fn'], loss_weights),
                 optimizer_function = optimizer.get(self.setup['optimizer_fn']),
                 batch_norm = self.setup['batch_norm'],
                 input_shape = self.setup['input_shape'],
                 n_filters = self.setup['filters']
             )
 
-        if weights:
+        if from_weights:
             self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
 
 
@@ -80,17 +80,24 @@ class MyModel():
     def train(self, epochs=50):
         time_callback = TimeHistory()
 
-        history = self.model.fit_generator(
-            self.train_generator,
-            epochs = epochs,
+        if self.setup['optimizer_fn'] == 'RAdam':
             callbacks = [
                 time_callback,
                 ReinitWeightOnFalseStart(patience=3, trials=1, checks=10, verbose=1),
-                # TensorBoard(log_dir=f'output/logs/{time()}-{self.checkpoint}'),
-                # EarlyStopping(patience=10, verbose=1),
+                ModelCheckpoint(f'output/models/{self.checkpoint}.hdf5', verbose=1, save_best_only=True)
+            ]
+        else:
+            callbacks = [
+                time_callback,
+                ReinitWeightOnFalseStart(patience=3, trials=1, checks=10, verbose=1),
                 ReduceLROnPlateau(factor=0.1, patience=6, min_lr=0.00001, verbose=1),
                 ModelCheckpoint(f'output/models/{self.checkpoint}.hdf5', verbose=1, save_best_only=True)
-            ],
+            ]
+
+        history = self.model.fit_generator(
+            self.train_generator,
+            epochs = epochs,
+            callbacks = callbacks,
             validation_data = self.test_generator
         )
 

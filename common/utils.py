@@ -154,3 +154,16 @@ def slice_3d(inputs, new_shape):
     outputs = outputs.reshape(-1, w, h, d)
 
     return outputs
+
+def calc_weights_generator(generator):
+    class_counter = { 'background': 0, 'structure': 0 }
+
+    for dummy_X, y in generator:
+        nonzeros = np.count_nonzero(y)
+        class_counter['background'] += y.size - nonzeros
+        class_counter['structure'] += nonzeros
+    class_share = { key: value / sum(class_counter.values()) for key, value in class_counter.items() }
+
+    class_weights = { 'background': class_share['structure'], 'structure': class_share['background'] }
+
+    return class_weights

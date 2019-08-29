@@ -1,16 +1,21 @@
-import tensorflow as tf
+from keras import backend as K
 
-def weighted_cross_entropy(beta):
-    def convert_to_logits(y_pred):
-        # see https://github.com/tensorflow/tensorflow/blob/r1.10/tensorflow/python/keras/backend.py#L3525
-        y_pred = tf.clip_by_value(y_pred, tf.keras.backend.epsilon(), 1 - tf.keras.backend.epsilon())
+def create_weighted_binary_crossentropy(weights):
+    print(weights)
 
-        return tf.log(y_pred / (1 - y_pred))
+    def weighted_binary_crossentropy(y_true, y_pred):
 
-    def weighted_cross(y_true, y_pred):
-        y_pred = convert_to_logits(y_pred)
-        loss = tf.nn.weighted_cross_entropy_with_logits(logits=y_pred, targets=y_true, pos_weight=beta)
+        # Original binary crossentropy (see losses.py):
+        # K.mean(K.binary_crossentropy(y_true, y_pred), axis=-1)
 
-        return tf.reduce_mean(loss)
+        # Calculate the binary crossentropy
+        b_ce = K.binary_crossentropy(y_true, y_pred)
 
-    return weighted_cross
+        # Apply the weights
+        weight_vector = y_true * weights['structure'] + (1. - y_true) * weights['background']
+        weighted_b_ce = weight_vector * b_ce
+
+        # Return the mean error
+        return K.mean(weighted_b_ce)
+
+    return weighted_binary_crossentropy

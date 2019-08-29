@@ -30,55 +30,14 @@ logs = {
 # Model different parameters
 setups = [
     {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 4, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 16, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 32, 'filters': 8, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 1, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
+        'arch': 'Unet3d', 'loss_fn': 'wce',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
         'optimizer_fn': 'Adam'
     },
     {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 8, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 16, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
-    {
-        'arch': 'Unet3d', 'loss_fn': 'binary',
-        'batch_size': 32, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
+        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'batch_size': 4, 'filters': 16, 'batch_norm': True,
+        'optimizer_fn': 'RAdam'
     }
 ]
 
@@ -166,6 +125,6 @@ scans = [
     'OASIS-TRT-20-17',
     'OASIS-TRT-20-18',
     'OASIS-TRT-20-19',
-    'OASIS-TRT-20-20'
+    # 'OASIS-TRT-20-20'
   ]
   
