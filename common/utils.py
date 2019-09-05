@@ -177,6 +177,11 @@ def calc_recall(mask, pred):
 
     return recall
 
+def calc_f1score(precision, recall):
+    f1 = 2 * ( (precision*recall) / (precision+recall) )
+
+    return f1
+
 def get_all_gen_items(generator):
     X_items = list()
     y_items = list()
