@@ -155,6 +155,49 @@ def calc_confusion_matrix(mask, pred):
 
     return fpr_perc, fnr_perc, fp_total, fn_total, f_total
 
+def calc_precision(mask, pred):
+    mask = mask.argmax(axis=-1)
+    pred = pred.argmax(axis=-1)
+    combined = mask * 2 + pred
+
+    fp_total = 0 # false positive total pixels
+    tp_total = 0 # true positive total pixels
+
+    for image in combined:
+        fp = np.count_nonzero(image == 1.0) # false positive (red)
+        tp = np.count_nonzero(image == 3.0) # true positive (green)
+
+        fp_total += fp
+        tp_total += tp
+
+    precision = tp_total / (tp_total + fp_total)
+
+    return precision
+
+def calc_recall(mask, pred):
+    mask = mask.argmax(axis=-1)
+    pred = pred.argmax(axis=-1)
+    combined = mask * 2 + pred
+
+    fn_total = 0 # false negative total pixels
+    tp_total = 0 # true positive total pixels
+
+    for image in combined:
+        fn = np.count_nonzero(image == 2.0) # false negative (yellow)
+        tp = np.count_nonzero(image == 3.0) # true positive (green)
+
+        fn_total += fn
+        tp_total += tp
+
+    recall = tp_total / tp_total + fn_total
+
+    return recall
+
+def calc_f1score(precision, recall):
+    f1 = 2 * ( (precision*recall) / (precision+recall) )
+
+    return f1
+
 def get_all_gen_items(generator):
     X_items = list()
     y_items = list()
