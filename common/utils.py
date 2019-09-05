@@ -31,6 +31,14 @@ def convert_to_binary_3d(data, labels):
 
     return data.astype(np.float32)
 
+def one_hot_encoding(y):
+    y = np.squeeze(y)
+    classes = { 'background': 0, 'structure': 1 }
+    z = np.zeros(y.shape + (len(classes),), dtype=np.float32)
+    for i in classes.values():
+        z[y == i] = np.float32([0 if j != i else 1 for j in classes.values()]) 
+    return z
+
 def resize_3d(data, new_shape):
     width, height, depth = new_shape
     in_width, in_height, in_depth = data.shape

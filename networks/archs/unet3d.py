@@ -67,7 +67,7 @@ def unet3d(input_shape, n_filters, loss_function, optimizer_function, batch_norm
   up9 = concatenate([up9, conv1])
   conv9 = conv_block(up9, n_filters)
 
-  outputs = Conv3D(filters=1, kernel_size=(1, 1, 1), activation='sigmoid')(conv9)
+  outputs = Conv3D(filters=2, kernel_size=(1, 1, 1), activation='sigmoid')(conv9)
   outputs = crop_to_fit(inputs, outputs)
 
   model = Model(inputs=[inputs], outputs=[outputs], name='Unet3d')

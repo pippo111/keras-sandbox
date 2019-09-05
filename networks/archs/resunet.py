@@ -85,7 +85,7 @@ def resunet(input_shape, n_filters, loss_function, optimizer_function):
   short7 = conv_block(short7, n_filters, activation=None)
   conv7 = Add()([conv7, short7])
 
-  outputs = Conv2D(filters=1, kernel_size=(1, 1), activation='sigmoid') (conv7)
+  outputs = Conv2D(filters=2, kernel_size=(1, 1), activation='sigmoid') (conv7)
 
   model = Model(inputs=[inputs], outputs=[outputs], name='ResUnet')
   model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])

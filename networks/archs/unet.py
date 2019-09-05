@@ -64,7 +64,7 @@ def unet(input_shape, n_filters, loss_function, optimizer_function, batch_norm=F
   up9 = concatenate([up9, conv1])
   conv9 = conv_block(up9, n_filters)
 
-  outputs = Conv2D(filters=1, kernel_size=(1, 1), activation='sigmoid')(conv9)
+  outputs = Conv2D(filters=2, kernel_size=(1, 1), activation='sigmoid')(conv9)
 
   model = Model(inputs=[inputs], outputs=[outputs], name='Unet')
   model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])
