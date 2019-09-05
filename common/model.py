@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
-from common.utils import get_all_gen_items, calc_confusion_matrix
+from common.utils import get_all_gen_items, calc_confusion_matrix, calc_precision, calc_recall, calc_f1score
 from common.plots import plot_confusions
 from common.logs import to_table
 from common.time_callback import TimeHistory
@@ -53,6 +53,9 @@ class MyModel():
             'fp_total': '',
             'fn_total': '',
             'f_total': '',
+            'precision': '',
+            'recall': '',
+            'f1score': '',
             'total_epochs': '',
             'time_per_epoch': ''
         }
@@ -124,6 +127,9 @@ class MyModel():
 
         # Calculate false and true positive and negative
         fp_rate, fn_rate, fp_total, fn_total, f_total = calc_confusion_matrix(y_test, y_preds)
+        precision = calc_precision(y_test, y_preds)
+        recall = calc_recall(y_test, y_preds)
+        f1score = calc_f1score(precision, recall)
 
         self.results['val_loss'] = val_loss
         self.results['val_acc'] = val_acc
@@ -132,6 +138,9 @@ class MyModel():
         self.results['fp_total'] = fp_total
         self.results['fn_total'] = fn_total
         self.results['f_total'] = f_total
+        self.results['precision'] = precision
+        self.results['recall'] = recall
+        self.results['f1score'] = f1score
         
         return fp_rate, fn_rate, fp_total, fn_total, f_total
 

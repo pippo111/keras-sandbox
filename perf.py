@@ -33,20 +33,20 @@ for setup in cfg.setups:
 
     
 
-    my_model.create(from_weights=False, loss_weights=loss_weights)
+    my_model.create(from_weights=True, loss_weights=loss_weights)
     my_model.print_summary()
 
     # Train model
-    my_model.train(epochs = cfg.model['epochs'])
+    # my_model.train(epochs = cfg.model['epochs'])
 
     # Evaluate model
     my_model.evaluate()
 
     # Plot sample output result
-    # my_model.plot_result(
-    #     coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
-    #     show = False, save = True
-    # )
+    my_model.plot_result(
+        coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
+        show = False, save = True
+    )
 
     # Save results
     my_model.save_results(f'output/models/{cfg.dataset["collection_name"]}_results')
