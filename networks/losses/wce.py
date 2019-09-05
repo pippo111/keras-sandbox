@@ -1,9 +1,9 @@
 from keras import backend as K
 
-def create_weighted_binary_crossentropy(weights):
+def weighted_binary_crossentropy_loss(weights):
     print(weights)
 
-    def weighted_binary_crossentropy(y_true, y_pred):
+    def weighted_binary_crossentropy_coef(y_true, y_pred):
 
         # Original binary crossentropy (see losses.py):
         # K.mean(K.binary_crossentropy(y_true, y_pred), axis=-1)
@@ -18,4 +18,4 @@ def create_weighted_binary_crossentropy(weights):
         # Return the mean error
         return K.mean(weighted_b_ce)
 
-    return weighted_binary_crossentropy
+    return weighted_binary_crossentropy_coef
