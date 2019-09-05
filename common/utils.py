@@ -158,6 +158,25 @@ def calc_precision(mask, pred):
 
     return precision
 
+def calc_recall(mask, pred):
+    mask = mask.argmax(axis=-1)
+    pred = pred.argmax(axis=-1)
+    combined = mask * 2 + pred
+
+    fn_total = 0 # false negative total pixels
+    tp_total = 0 # true positive total pixels
+
+    for image in combined:
+        fn = np.count_nonzero(image == 2.0) # false negative (yellow)
+        tp = np.count_nonzero(image == 3.0) # true positive (green)
+
+        fn_total += fn
+        tp_total += tp
+
+    recall = tp_total / tp_total + fn_total
+
+    return recall
+
 def get_all_gen_items(generator):
     X_items = list()
     y_items = list()
