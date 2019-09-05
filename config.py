@@ -30,7 +30,7 @@ logs = {
 # Model different parameters
 setups = [
     {
-        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'arch': 'Unet3d', 'loss_fn': 'surface',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
         'optimizer_fn': 'RAdam'
     }

@@ -14,7 +14,8 @@ for setup in cfg.setups:
 
     # Create generators
     train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
-    loss_weights = calc_weights_generator(train_generator)
+    # loss_weights = calc_weights_generator(train_generator)
+    loss_weights = None
     print(loss_weights)
 
     # Create model

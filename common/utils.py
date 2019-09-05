@@ -37,6 +37,22 @@ def one_hot_encode(seg, C):
 
     return res
 
+def calc_dist(seg):
+    seg = np.moveaxis(seg, -1, 0)
+    C = len(seg)
+
+    res = np.zeros_like(seg)
+    for c in range(C):
+        posmask = seg[c].astype(np.bool)
+
+        if posmask.any():
+            negmask = ~posmask
+            res[c] = distance(negmask) * negmask - (distance(posmask) - 1) * posmask
+
+    res = np.moveaxis(res, 0, -1)
+    
+    return res
+
 def resize_3d(data, new_shape):
     width, height, depth = new_shape
     in_width, in_height, in_depth = data.shape
