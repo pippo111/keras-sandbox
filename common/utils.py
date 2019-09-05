@@ -2,7 +2,7 @@ import numpy as np
 import os
 import nibabel as nib
 import random
-from scipy.ndimage import zoom, rotate, shift
+from scipy.ndimage import zoom, rotate, shift, distance_transform_edt as distance
 from keras.layers.convolutional import ZeroPadding3D, Cropping3D
 from keras.backend import int_shape
 
@@ -31,13 +31,11 @@ def convert_to_binary_3d(data, labels):
 
     return data.astype(np.float32)
 
-def one_hot_encoding(y):
-    y = np.squeeze(y)
-    classes = { 'background': 0, 'structure': 1 }
-    z = np.zeros(y.shape + (len(classes),), dtype=np.float32)
-    for i in classes.values():
-        z[y == i] = np.float32([0 if j != i else 1 for j in classes.values()]) 
-    return z
+def one_hot_encode(seg, C):
+    seg = seg.squeeze()
+    res = np.stack([seg == c for c in range(C)], axis=-1).astype(np.float32)
+
+    return res
 
 def resize_3d(data, new_shape):
     width, height, depth = new_shape
@@ -111,6 +109,8 @@ def crop_to_fit(inputs, outputs, n_layers=4):
     return x
 
 def calc_confusion_matrix(mask, pred):
+    mask = mask.argmax(axis=-1)
+    pred = pred.argmax(axis=-1)
     combined = mask * 2 + pred
 
     fp_total = 0 # false positive total pixels
@@ -167,6 +167,7 @@ def calc_weights_generator(generator):
     class_counter = { 'background': 0, 'structure': 0 }
 
     for dummy_X, y in generator:
+        y = np.array(y).argmax(axis=-1)
         nonzeros = np.count_nonzero(y)
         class_counter['background'] += y.size - nonzeros
         class_counter['structure'] += nonzeros

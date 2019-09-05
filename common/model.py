@@ -119,7 +119,7 @@ class MyModel():
         # Validate model
         val_loss, val_acc = self.model.evaluate_generator(self.valid_generator, verbose=1)
         
-        dummy_X_preds, y_preds = self.predict(self.valid_generator, self.setup['threshold'])
+        y_preds = self.predict(self.valid_generator, self.setup['threshold'])
         dummy_X_test, y_test = get_all_gen_items(self.valid_generator)
 
         # Calculate false and true positive and negative
@@ -138,21 +138,23 @@ class MyModel():
     """Returns predicted region and segmented representation
     """
     def predict(self, generator, threshold):
-        X_preds = self.model.predict_generator(generator, verbose=1)
-        y_preds = (X_preds > threshold).astype(np.uint8)
+        preds = self.model.predict_generator(generator, verbose=1)
         
-        return X_preds, y_preds
+        return preds
 
     """Display a plot with sample image and prediction
     It is possible to only save image as png
     """
     def plot_result(self, coords, show=True, save=False):
-        dummy_X_preds, y_preds = self.predict(self.test_generator, self.setup['threshold'])
-        X_test, y_test = get_all_gen_items(self.test_generator)[30]
+        y_preds = self.predict(self.test_generator, self.setup['threshold'])
+        X_test, y_test = get_all_gen_items(self.test_generator)
 
-        image = X_test[0].squeeze()
-        mask = y_test[0].squeeze()
-        pred = y_preds[0].squeeze()
+        y_test = y_test.argmax(axis=-1)
+        y_preds = y_preds.argmax(axis=-1)
+
+        image = X_test[15].squeeze()
+        mask = y_test[15].squeeze()
+        pred = y_preds[15].squeeze()
 
         plot_confusions(
             image,

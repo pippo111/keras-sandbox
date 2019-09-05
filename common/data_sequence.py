@@ -2,7 +2,7 @@ import numpy as np
 import random
 from keras.utils import Sequence
 
-from common.utils import augment_3d, one_hot_encoding
+from common.utils import augment_3d, one_hot_encode
 
 class DataSequence3d(Sequence):
     def __init__(self, X_set, y_set, batch_size, shuffle=True, augmentation=False):
@@ -32,7 +32,7 @@ class DataSequence3d(Sequence):
         batch_y = batch_y.reshape(batch_y.shape[0], batch_y.shape[1], batch_y.shape[2], batch_y.shape[3], 1)
         batch_y = batch_y / 255.0
 
-        batch_y = np.array([one_hot_encoding(y) for y in batch_y])
+        batch_y = np.array([one_hot_encode(y, 2) for y in batch_y])
         
         return batch_X, batch_y
     

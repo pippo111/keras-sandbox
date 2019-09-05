@@ -22,18 +22,13 @@ model = {
 }
 
 logs = {
-    'axis_0': 10,
-    'axis_1': 10,
-    'axis_2': 28
+    'axis_0': 34,
+    'axis_1': 52,
+    'axis_2': 2
 }
 
 # Model different parameters
 setups = [
-    {
-        'arch': 'Unet3d', 'loss_fn': 'wce',
-        'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'Adam'
-    },
     {
         'arch': 'Unet3d', 'loss_fn': 'wce',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
