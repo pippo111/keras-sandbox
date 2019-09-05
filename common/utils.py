@@ -173,7 +173,7 @@ def calc_recall(mask, pred):
         fn_total += fn
         tp_total += tp
 
-    recall = tp_total / tp_total + fn_total
+    recall = tp_total / (tp_total + fn_total)
 
     return recall
 
