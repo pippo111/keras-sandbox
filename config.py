@@ -32,7 +32,7 @@ setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'surface',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
+        'optimizer_fn': 'Adam'
     }
 ]
 

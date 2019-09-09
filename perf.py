@@ -32,13 +32,11 @@ for setup in cfg.setups:
             input_shape = cfg.dataset['input_shape']
         )
 
-    
-
-    my_model.create(from_weights=True, loss_weights=loss_weights)
+    my_model.create(from_weights=False, loss_weights=loss_weights)
     my_model.print_summary()
 
     # Train model
-    # my_model.train(epochs = cfg.model['epochs'])
+    my_model.train(epochs = cfg.model['epochs'])
 
     # Evaluate model
     my_model.evaluate()

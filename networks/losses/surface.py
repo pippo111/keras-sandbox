@@ -3,7 +3,10 @@ import tensorflow as tf
 
 def surface_loss():
     def surface_coef(y_dist, y_pred):
-        multipled = tf.einsum("bwhdc,bwhdc->bwhdc", y_pred, y_dist)
+        y_dist_struct = y_dist[..., 1]
+        y_pred_struct = y_pred[..., 1]
+
+        multipled = tf.einsum("bwhd,bwhd->bwhd", y_pred_struct, y_dist_struct)
 
         loss = K.mean(multipled)
 
