@@ -109,8 +109,6 @@ def crop_to_fit(inputs, outputs, n_layers=4):
     return x
 
 def calc_confusion_matrix(mask, pred):
-    mask = mask.argmax(axis=-1)
-    pred = pred.argmax(axis=-1)
     combined = mask * 2 + pred
 
     fp_total = 0 # false positive total pixels
@@ -140,8 +138,6 @@ def calc_confusion_matrix(mask, pred):
     return fpr_perc, fnr_perc, fp_total, fn_total, f_total
 
 def calc_precision(mask, pred):
-    mask = mask.argmax(axis=-1)
-    pred = pred.argmax(axis=-1)
     combined = mask * 2 + pred
 
     fp_total = 0 # false positive total pixels
@@ -159,8 +155,6 @@ def calc_precision(mask, pred):
     return precision
 
 def calc_recall(mask, pred):
-    mask = mask.argmax(axis=-1)
-    pred = pred.argmax(axis=-1)
     combined = mask * 2 + pred
 
     fn_total = 0 # false negative total pixels

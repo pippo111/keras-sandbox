@@ -101,7 +101,7 @@ class MyModel():
             self.train_generator,
             epochs = epochs,
             callbacks = callbacks,
-            validation_data = self.test_generator
+            validation_data = self.valid_generator
         )
 
         times = time_callback.times
@@ -157,9 +157,6 @@ class MyModel():
     def plot_result(self, coords, show=True, save=False):
         y_preds = self.predict(self.test_generator, self.setup['threshold'])
         X_test, y_test = get_all_gen_items(self.test_generator)
-
-        y_test = y_test.argmax(axis=-1)
-        y_preds = y_preds.argmax(axis=-1)
 
         image = X_test[15].squeeze()
         mask = y_test[15].squeeze()

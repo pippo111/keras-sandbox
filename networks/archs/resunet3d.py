@@ -85,7 +85,7 @@ def resunet3d(input_shape, n_filters, loss_function, optimizer_function, batch_n
   short7 = conv_block(short7, n_filters, activation=None, batch_norm=batch_norm)
   conv7 = Add()([conv7, short7])
 
-  outputs = Conv3D(filters=2, kernel_size=(1, 1, 1), activation='sigmoid') (conv7)
+  outputs = Conv3D(filters=1, kernel_size=(1, 1, 1), activation='sigmoid') (conv7)
 
   model = Model(inputs=[inputs], outputs=[outputs], name='ResUnet3d')
   model.compile(optimizer=optimizer_function, loss=loss_function, metrics=['accuracy'])
