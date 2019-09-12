@@ -1,8 +1,3 @@
-# Brain 48x64x64 offsets: 27, 26, 42
-# Brain 96x128x128 offsets: 45, 44, 84
-# Left / right lateral ventricles 48x64x64 offsets: 27, 26, 42
-# Left / right lateral ventricles 96x128x128 offsets: 45, 44, 84
-
 # Dataset common setup
 dataset = {
     'collection_name': 'mindboggle_84_Nx48x64x64_brain',
@@ -17,11 +12,11 @@ dataset = {
 # Models common setup
 model = {
     'struct': 'brain',
-    'epochs': 100,
-    'seed': 1,
-    'threshold': 0.5
+    'epochs': 2,
+    'seed': 1
 }
 
+# Slices to plot
 logs = {
     'axis_0': 34,
     'axis_1': 52,
@@ -32,12 +27,18 @@ logs = {
 setups = [
     {
         'arch': 'Unet3d', 'loss_fn': 'binary',
+        'batch_size': 4, 'filters': 8, 'batch_norm': False,
+        'optimizer_fn': 'RAdam', 'threshold': 0.5
+    },
+    {
+        'arch': 'Unet3d', 'loss_fn': 'binary',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
-        'optimizer_fn': 'RAdam'
+        'optimizer_fn': 'RAdam', 'threshold': 0.5
     }
 ]
 
 scans = [
+    # These we will use for train and validation:
     'Afterthought-1',
     'MMRR-3T7T-2-1',
     'MMRR-3T7T-2-2',
@@ -121,6 +122,7 @@ scans = [
     'OASIS-TRT-20-17',
     'OASIS-TRT-20-18',
     'OASIS-TRT-20-19',
+    # This we will use only for test:
     # 'OASIS-TRT-20-20'
   ]
   

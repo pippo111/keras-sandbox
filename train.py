@@ -14,8 +14,12 @@ for setup in cfg.setups:
 
     # Create generators
     train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
-    loss_weights = calc_weights_generator(train_generator)
-    print(loss_weights)
+
+    # Only for weighted loss functions
+    if setup['loss_fn'] == 'wce':
+        loss_weights = calc_weights_generator(train_generator)
+    else:
+        loss_weights = None
 
     # Create model
     my_model = MyModel(
@@ -29,16 +33,15 @@ for setup in cfg.setups:
             batch_size = setup['batch_size'],
             batch_norm = setup['batch_norm'],
             filters = setup['filters'],
-            input_shape = cfg.dataset['input_shape']
+            input_shape = cfg.dataset['input_shape'],
+            threshold = setup['threshold']
         )
 
-    
-
-    my_model.create(load_weights=True, loss_weights=loss_weights)
+    my_model.create(load_weights=False, loss_weights=loss_weights)
     my_model.print_summary()
 
     # Train model
-    # my_model.train(epochs = cfg.model['epochs'])
+    my_model.train(epochs = cfg.model['epochs'])
 
     # Evaluate model
     my_model.evaluate()
