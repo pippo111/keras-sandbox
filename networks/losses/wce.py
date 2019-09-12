@@ -1,7 +1,8 @@
 from keras import backend as K
 
 def weighted_binary_crossentropy_loss(weights):
-    print(weights)
+    if not weights:
+        weights = { 'background': 0.5, 'structure': 0.5 }
 
     def weighted_binary_crossentropy_coef(y_true, y_pred):
 

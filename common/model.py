@@ -16,7 +16,7 @@ class MyModel():
     def __init__(
             self,
             train_generator, valid_generator, test_generator,
-            arch, loss_fn, optimizer_fn,
+            struct, arch, loss_fn, optimizer_fn,
             batch_size=16, batch_norm=False, filters=16,
             threshold=0.5, input_shape=(48,64,64)
         ):
@@ -24,7 +24,8 @@ class MyModel():
         self.valid_generator = valid_generator
         self.test_generator = test_generator
 
-        self.checkpoint = "{}_{}_{}_bs-{}_bn-{}_f-{}".format(
+        self.checkpoint = "{}_{}_{}_{}_bs-{}_bn-{}_f-{}".format(
+                struct,
                 arch,
                 optimizer_fn,
                 loss_fn,
@@ -63,7 +64,7 @@ class MyModel():
     """Creates and compile model with given hyperparameters
     It is possible to load model weights from previous training
     """
-    def create(self, from_weights=False, loss_weights=None):
+    def create(self, load_weights=False, loss_weights=None, filename=''):
         self.model = network.get(
                 name = self.setup['arch'],
                 loss_function = loss.get(self.setup['loss_fn'], loss_weights),
@@ -73,8 +74,10 @@ class MyModel():
                 n_filters = self.setup['filters']
             )
 
-        if from_weights:
-            self.model.load_weights(f'output/models/{self.checkpoint}.hdf5')
+        filename = filename or self.checkpoint
+
+        if load_weights:
+            self.model.load_weights(f'output/models/{filename}.hdf5')
 
 
     """Perform model training

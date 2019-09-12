@@ -16,6 +16,7 @@ dataset = {
 
 # Models common setup
 model = {
+    'struct': 'brain',
     'epochs': 100,
     'seed': 1,
     'threshold': 0.5

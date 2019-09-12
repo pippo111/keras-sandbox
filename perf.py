@@ -22,6 +22,7 @@ for setup in cfg.setups:
             train_generator = train_generator,
             valid_generator = valid_generator,
             test_generator = test_generator,
+            struct = cfg.model['struct'],
             arch = setup['arch'],
             loss_fn = setup['loss_fn'],
             optimizer_fn = setup['optimizer_fn'],
@@ -33,7 +34,7 @@ for setup in cfg.setups:
 
     
 
-    my_model.create(from_weights=True, loss_weights=loss_weights)
+    my_model.create(load_weights=True, loss_weights=loss_weights)
     my_model.print_summary()
 
     # Train model
