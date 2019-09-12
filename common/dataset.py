@@ -47,13 +47,13 @@ class MyDataset():
         X_train, X_valid, X_test, y_train, y_valid, y_test = self.get_train_valid_test_files()
 
         if self.dims == '2d':
-            train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=True)
-            valid_generator = data_sequence.DataSequence3d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
-            test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
-        else:
-            train_generator = data_sequence.DataSequence2d(X_train, y_train, self.batch_size, augmentation=False)
+            train_generator = data_sequence.DataSequence2d(X_train, y_train, self.batch_size, augmentation=True)
             valid_generator = data_sequence.DataSequence2d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
             test_generator = data_sequence.DataSequence2d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
+        else:
+            train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=False)
+            valid_generator = data_sequence.DataSequence3d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
+            test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
 
         self.train_generator = train_generator
         self.valid_generator = valid_generator
