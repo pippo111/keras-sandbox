@@ -11,6 +11,9 @@
 /output/models/*
 !/output/models/.gitkeep
 
+# Custom config file
+/config.py
+
 # IDE config files
 /.vscode/*
 
