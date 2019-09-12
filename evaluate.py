@@ -13,7 +13,7 @@ for setup in cfg.setups:
     )
 
     # Create generators
-    train_generator, valid_generator, test_generator = my_dataset.get_generators_3d()
+    train_generator, valid_generator, test_generator = my_dataset.get_generators()
     loss_weights = None
 
     # Create model

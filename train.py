@@ -13,7 +13,7 @@ for setup in cfg.setups:
     )
 
     # Create generators
-    train_generator, valid_generator, test_generator = my_dataset.get_generators_3d()
+    train_generator, valid_generator, test_generator = my_dataset.get_generators()
 
     # Only for weighted loss functions
     if setup['loss_fn'] == 'wce':
@@ -47,10 +47,10 @@ for setup in cfg.setups:
     my_model.evaluate()
 
     # Plot sample output result
-    my_model.plot_result(
-        coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
-        show = False, save = True
-    )
+    # my_model.plot_result(
+    #     coords = (cfg.logs['axis_0'], cfg.logs['axis_1'], cfg.logs['axis_2']),
+    #     show = False, save = True
+    # )
 
     # Save results
     my_model.save_results(f'output/models/{cfg.dataset["collection_name"]}_results')

@@ -65,12 +65,15 @@ class MyModel():
     It is possible to load model weights from previous training
     """
     def create(self, load_weights=False, loss_weights=None, filename=''):
+        # if we want to use 2d model arch we need to squeeze tuple
+        squeezed_input_shape = tuple(x for x in self.setup['input_shape'] if x > 1)
+
         self.model = network.get(
                 name = self.setup['arch'],
                 loss_function = loss.get(self.setup['loss_fn'], loss_weights),
                 optimizer_function = optimizer.get(self.setup['optimizer_fn']),
                 batch_norm = self.setup['batch_norm'],
-                input_shape = self.setup['input_shape'],
+                input_shape = squeezed_input_shape,
                 n_filters = self.setup['filters']
             )
 

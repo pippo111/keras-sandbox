@@ -38,15 +38,22 @@ class MyDataset():
         self.in_dataset_dir = './input/niftii'
         self.out_dataset_dir = os.path.join('./input/datasets', collection_name)
 
+        self.dims = '2d' if 1 in input_shape else '3d'
+
     """ Public API
     Returns data generators for 3d models
     """
-    def get_generators_3d(self):
+    def get_generators(self):
         X_train, X_valid, X_test, y_train, y_valid, y_test = self.get_train_valid_test_files()
 
-        train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=True)
-        valid_generator = data_sequence.DataSequence3d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
-        test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
+        if self.dims == '2d':
+            train_generator = data_sequence.DataSequence3d(X_train, y_train, self.batch_size, augmentation=True)
+            valid_generator = data_sequence.DataSequence3d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
+            test_generator = data_sequence.DataSequence3d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
+        else:
+            train_generator = data_sequence.DataSequence2d(X_train, y_train, self.batch_size, augmentation=False)
+            valid_generator = data_sequence.DataSequence2d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
+            test_generator = data_sequence.DataSequence2d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
 
         self.train_generator = train_generator
         self.valid_generator = valid_generator
@@ -99,7 +106,7 @@ class MyDataset():
 
         norm_data = utils.norm_to_uint8(data)
 
-        if 1 in norm_data.shape:
+        if self.dims == '2d':
             print(f'Saving {types} as {data_full_name}.png')
             im = Image.fromarray(np.rot90(norm_data.squeeze()))
             im.save(f'{data_full_name}.png')
