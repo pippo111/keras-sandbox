@@ -7,9 +7,9 @@ my_dataset = MyDataset(
   input_label_niftii = cfg.dataset['input_label_niftii'],
   input_image_niftii = cfg.dataset['input_image_niftii'],
   labels = cfg.dataset['labels'],
-  scan_shape=cfg.dataset['scan_shape'],
-  input_shape=cfg.dataset['input_shape'],
-  scans=cfg.scans,
-  only_masks=True
+  scan_shape = cfg.dataset['scan_shape'],
+  input_shape = cfg.dataset['input_shape'],
+  scans = cfg.scans,
+  only_masks=cfg.dataset['only_masks']
 )
-my_dataset.create_dataset_3d()
+my_dataset.create_dataset()

@@ -13,7 +13,7 @@ for setup in cfg.setups:
     )
 
     # Create generators
-    train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
+    train_generator, valid_generator, test_generator = my_dataset.get_generators_3d()
 
     # Only for weighted loss functions
     if setup['loss_fn'] == 'wce':

@@ -6,7 +6,45 @@ from scipy.ndimage import zoom, rotate, shift, distance_transform_edt as distanc
 from keras.layers.convolutional import ZeroPadding3D, Cropping3D
 from keras.backend import int_shape
 
-def norm_to_uint8(data):
+""" Divide background and structure by labels
+Returns binarized image as 0|255
+"""
+def binarize(data: np.ndarray, labels: list) -> np.ndarray:
+    for label in labels:
+        data[data == label] = 255.0
+
+    data[data != 255.0] = 0.0
+
+    return data.astype(np.uint8)
+
+""" Resizes image to desired shape 2d/3d
+"""
+def resize(data: np.ndarray, new_shape: tuple) -> np.ndarray:
+    old_shape = data.shape
+    ratios = tuple(new_dim / old_dim for new_dim, old_dim in zip(new_shape, old_shape))
+
+    resized_data = zoom(data, ratios, order=0)
+
+    return resized_data.astype(np.float32)
+
+""" Slices cuboid into smaller pieces
+    Can be undone by 'uncubify' fn
+"""
+def slice_cuboid(inputs: np.ndarray, new_shape: tuple) -> np.ndarray:
+    W, H, D = inputs.shape
+    w, h, d = new_shape
+
+    outputs = inputs.reshape(W//w, w, H//h, h, D//d, d)
+    outputs = outputs.transpose(0,2,4,1,3,5)
+
+    outputs = outputs.reshape(-1, w, h, d)
+
+    return outputs
+
+"""Normalizes input image to range 0-255
+    Can be undone by 'uncubify' fn
+"""
+def norm_to_uint8(data: np.ndarray) -> np.ndarray:
     max_value = data.max()
     if not max_value == 0:
         data = data / max_value
@@ -15,38 +53,11 @@ def norm_to_uint8(data):
     img = data.astype(np.uint8)
     return img
 
-def norm_to_float32(data):
-    max_value = data.max()
-    if not max_value == 0:
-        data = data / max_value
-
-    img = data.astype(np.uint8)
-    return img
-
-def convert_to_binary_3d(data, labels):
-    for label in labels:
-        data[data == label] = 255.0
-
-    data[data != 255.0] = 0.0
-
-    return data.astype(np.float32)
-
 def one_hot_encode(seg, C):
     seg = seg.squeeze()
     res = np.stack([seg == c for c in range(C)], axis=-1).astype(np.float32)
 
     return res
-
-def resize_3d(data, new_shape):
-    width, height, depth = new_shape
-    in_width, in_height, in_depth = data.shape
-    width_ratio = width / in_width
-    height_ratio = height /in_height
-    depth_ratio = depth / in_depth
-
-    resized_data = zoom(data, (width_ratio, height_ratio, depth_ratio), order=0)
-
-    return resized_data
 
 def augment_3d(x, y):
     rotate_range = 5
@@ -64,7 +75,7 @@ def augment_3d(x, y):
 
     return x, y
 
-def load_image_data(filename, path='.'):
+def load_image_data(filename: str, path: str = '.') -> np.ndarray:
     full_path = os.path.join(path, filename)
     img = nib.load(full_path)
     img_data = img.get_fdata(dtype=np.float32)
@@ -203,19 +214,10 @@ def pad_3d(data, w, h, d, cube_dim):
     
     return data
 
-def slice_3d(inputs, new_shape):
-    W, H, D = inputs.shape
-    w, h, d = new_shape
 
-    outputs = inputs.reshape(W//w, w, H//h, h, D//d, d)
-    outputs = outputs.transpose(0,2,4,1,3,5)
-
-    outputs = outputs.reshape(-1, w, h, d)
-
-    return outputs
 
 def uncubify(arr, oldshape):
-    N, newshape = arr.shape[0], arr.shape[1:]
+    dummy_N, newshape = arr.shape[0], arr.shape[1:]
     oldshape = np.array(oldshape)    
     repeats = (oldshape / newshape).astype(int)
     tmpshape = np.concatenate([repeats, newshape])

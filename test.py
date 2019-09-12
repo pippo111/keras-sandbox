@@ -13,7 +13,7 @@ my_dataset = dataset.MyDataset(
     collection_name=cfg.dataset['collection_name']
 )
 
-train_generator, valid_generator, test_generator = my_dataset.create_train_valid_test_gen()
+train_generator, valid_generator, test_generator = my_dataset.get_generators_3d()
 test_image, test_mask = get_all_gen_items(test_generator)
 test_image, test_mask = test_generator.__getitem__(0)
 
