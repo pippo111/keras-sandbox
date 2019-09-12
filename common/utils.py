@@ -189,6 +189,20 @@ def get_all_gen_items(generator):
 
     return np.array(X_items), np.array(y_items)
 
+def pad_3d(data, w, h, d, cube_dim):
+    pad_w = (cube_dim - w) // 2
+    pad_h = (cube_dim - h) // 2
+    pad_d = (cube_dim - d) // 2
+
+    data = np.pad(
+        data,
+        [(pad_w, pad_w), (pad_h, pad_h), (pad_d, pad_d)],
+        mode='constant',
+        constant_values=0
+    )
+    
+    return data
+
 def slice_3d(inputs, new_shape):
     W, H, D = inputs.shape
     w, h, d = new_shape
@@ -199,6 +213,14 @@ def slice_3d(inputs, new_shape):
     outputs = outputs.reshape(-1, w, h, d)
 
     return outputs
+
+def uncubify(arr, oldshape):
+    N, newshape = arr.shape[0], arr.shape[1:]
+    oldshape = np.array(oldshape)    
+    repeats = (oldshape / newshape).astype(int)
+    tmpshape = np.concatenate([repeats, newshape])
+    order = np.arange(len(tmpshape)).reshape(2, -1).ravel(order='F')
+    return arr.reshape(tmpshape).transpose(order).reshape(oldshape)
 
 def calc_weights_generator(generator):
     class_counter = { 'background': 0, 'structure': 0 }

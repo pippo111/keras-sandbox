@@ -148,6 +148,7 @@ class MyModel():
     """
     def predict(self, generator, threshold):
         preds = self.model.predict_generator(generator, verbose=1)
+        preds = (preds > threshold).astype(np.uint8)
         
         return preds
 

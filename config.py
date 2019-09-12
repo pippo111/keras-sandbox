@@ -5,7 +5,7 @@
 
 # Dataset common setup
 dataset = {
-    'collection_name': 'mindboggle_84_Nx48x64x64_lateral_ventricle',
+    'collection_name': 'mindboggle_84_Nx48x64x64_brain',
     'input_label_niftii': 'aseg-in-t1weighted_2std.nii.gz',
     'input_image_niftii': 't1weighted_2std.nii.gz',
     'scan_shape': (192, 256, 256),
@@ -30,7 +30,7 @@ logs = {
 # Model different parameters
 setups = [
     {
-        'arch': 'Unet3d', 'loss_fn': 'wce',
+        'arch': 'Unet3d', 'loss_fn': 'binary',
         'batch_size': 4, 'filters': 16, 'batch_norm': True,
         'optimizer_fn': 'RAdam'
     }
