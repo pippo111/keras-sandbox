@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # First build your docker image by running:
-# > docker build -t fbdev/ml-sandbox .
+# > docker build --build-arg TF_PACKAGE=tensorflow-gpu -t fbdev/ml-sandbox .
 # Then run:
 # > xhost local:docker
 # to enable gui application
