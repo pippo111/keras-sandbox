@@ -108,7 +108,7 @@ class MyDataset():
 
         if self.dims == '2d':
             print(f'Saving {types} as {data_full_name}.png')
-            im = Image.fromarray(np.rot90(norm_data.squeeze()))
+            im = Image.fromarray(norm_data.squeeze())
             im.save(f'{data_full_name}.png')
         else:
             print(f'Saving {types} as {data_full_name}.npy')

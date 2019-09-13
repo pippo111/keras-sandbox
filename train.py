@@ -9,7 +9,8 @@ for setup in cfg.setups:
     my_dataset = MyDataset(
         collection_name = cfg.dataset['collection_name'],
         batch_size = setup['batch_size'],
-        limit = cfg.dataset['limit']
+        limit = cfg.dataset['limit'],
+        input_shape = cfg.dataset['input_shape']
     )
 
     # Create generators

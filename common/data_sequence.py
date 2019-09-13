@@ -54,15 +54,14 @@ class DataSequence2d(Sequence):
         batch_X = self.X[idx * self.batch_size:(idx + 1) * self.batch_size]
         batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
         
-        batch_X = [img_to_array(load_img(X, color_mode='grayscale')) for X in batch_X]
-        batch_y = [img_to_array(load_img(y, color_mode='grayscale')) for y in batch_y]
+        batch_X = np.array([img_to_array(load_img(X, color_mode='grayscale')) / 255 for X in batch_X]).astype(np.float32)
+        batch_y = np.array([img_to_array(load_img(y, color_mode='grayscale')) / 255 for y in batch_y]).astype(np.float32)
 
-        batch_X = np.array(batch_X).astype(np.float32) / 255.0
-        batch_y = np.array(batch_y).astype(np.float32) / 255.0
+        # we standarize image size and orientation in case of dataset rotation
+        if batch_y.shape[1] > batch_y.shape[2]:
+            batch_X = np.moveaxis(batch_X, 1, 2)
+            batch_y = np.moveaxis(batch_y, 1, 2)
 
-        batch_X = np.moveaxis(batch_X, 1, 2)
-        batch_y = np.moveaxis(batch_y, 1, 2)
-        
         return batch_X, batch_y
     
     def on_epoch_end(self):
