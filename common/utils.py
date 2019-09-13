@@ -10,10 +10,12 @@ from keras.backend import int_shape
 Returns binarized image as 0|255
 """
 def binarize(data: np.ndarray, labels: list) -> np.ndarray:
-    for label in labels:
-        data[data == label] = 255.0
+    # for label in labels:
+    #     data[data == label] = 255.0
 
-    data[data != 255.0] = 0.0
+    # data[data != 255.0] = 0.0
+
+    data[data != 0.0] = 255.0
 
     return data.astype(np.uint8)
 
@@ -41,7 +43,7 @@ def slice_cuboid(inputs: np.ndarray, new_shape: tuple) -> np.ndarray:
 
     return outputs
 
-"""Normalizes input image to range 0-255
+""" Normalizes input image to range 0-255
     Can be undone by 'uncubify' fn
 """
 def norm_to_uint8(data: np.ndarray) -> np.ndarray:
@@ -52,6 +54,17 @@ def norm_to_uint8(data: np.ndarray) -> np.ndarray:
     data = 255 * data
     img = data.astype(np.uint8)
     return img
+
+""" Normalizes to float32 0-1 with grayscale channel
+"""
+def norm_to_training(data: np.ndarray) -> np.ndarray:
+    max_value = data.max()
+    if not max_value == 0:
+        data = data / max_value
+
+    data = data.reshape((*data.shape, 1)).astype(np.float32)
+
+    return data
 
 def one_hot_encode(seg, C):
     seg = seg.squeeze()

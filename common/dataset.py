@@ -47,7 +47,7 @@ class MyDataset():
         X_train, X_valid, X_test, y_train, y_valid, y_test = self.get_train_valid_test_files()
 
         if self.dims == '2d':
-            train_generator = data_sequence.DataSequence2d(X_train, y_train, self.batch_size, augmentation=True)
+            train_generator = data_sequence.DataSequence2d(X_train, y_train, self.batch_size, augmentation=False)
             valid_generator = data_sequence.DataSequence2d(X_valid, y_valid, self.batch_size, shuffle=False, augmentation=False)
             test_generator = data_sequence.DataSequence2d(X_test, y_test, self.batch_size, shuffle=False, augmentation=False)
         else:
@@ -101,18 +101,17 @@ class MyDataset():
         data_full_path = os.path.join(self.out_dataset_dir, types)
         data_full_name = os.path.join(data_full_path, name)
 
+        print(f'Saving {types} as {data_full_name}.npy')
+
         if not os.path.exists(data_full_path):
             os.makedirs(data_full_path)
 
-        norm_data = utils.norm_to_uint8(data)
+        norm_data = utils.norm_to_training(data)
 
         if self.dims == '2d':
-            print(f'Saving {types} as {data_full_name}.png')
-            im = Image.fromarray(norm_data.squeeze())
-            im.save(f'{data_full_name}.png')
-        else:
-            print(f'Saving {types} as {data_full_name}.npy')
-            np.save(data_full_name, norm_data)
+            norm_data = np.squeeze(norm_data, axis=-1)
+
+        np.save(data_full_name, norm_data)
 
         print('Done.')
 
